@@ -1,0 +1,30 @@
+# Normalize line endings in the repository to LF, regardless of the platform
+# a contributor is on. Without this, a checkout on Windows (core.autocrlf=true)
+# rewrites every text file to CRLF, and the next clone on macOS or Linux shows
+# whole-file diffs for changes nobody made.
+* text=auto eol=lf
+
+# Binary assets — never touch these.
+# public/brand/prism-logo.png must stay byte-identical to what prism.inc
+# serves (sha256 cac2f10a…e55c); spec §13.2 item 18 forbids editing it, and a
+# line-ending pass would corrupt it. Git detects PNGs as binary on its own,
+# but state it explicitly so the constraint is visible rather than inferred.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.webp binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.otf binary
+*.pdf binary
+
+# Shader sources are plain text and are loaded as strings at build time.
+*.vert text eol=lf
+*.frag text eol=lf
+*.glsl text eol=lf
+
+# Generated — collapse in diffs and don't count toward language stats.
+package-lock.json -diff linguist-generated
