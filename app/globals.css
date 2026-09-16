@@ -1,0 +1,217 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ================================================================
+   Design tokens — spec §3.1. Defined once, here.
+   lib/theme.ts mirrors the spectrum bands as plain hex for three.js,
+   which cannot read CSS custom properties.
+   ================================================================ */
+
+:root {
+  --void: #05060a;
+  --void-2: #0b0d12;
+
+  /* ⚠️ GEOMETRY ONLY — NEVER TEXT.
+     #4A4F5C is 2.6:1 on --void, far below the WCAG AA 4.5:1 floor for
+     body text. It exists for unlit structural geometry (tunnel ribs,
+     frames) and nothing else. If you need dim text, use --ink-muted
+     (7.2:1). Spec §3.1 calls this out as its one hard constraint. */
+  --structure: #4a4f5c;
+
+  --ink-primary: #edeff2; /* 15.8:1 on --void — clears AAA */
+  --ink-muted: #8990a0; /*  7.2:1 on --void — clears AA  */
+
+  --utility-bg: #f1f1ee;
+  --utility-ink: #14161a; /* 15.1:1 on --utility-bg — clears AAA */
+  --utility-muted: #5b5f68; /*  6.1:1 on --utility-bg — clears AA  */
+  --utility-line: rgba(20, 22, 26, 0.12);
+
+  /* Spectrum bands. All five clear AA as text on --void; violet clears
+     AAA only at large sizes, so keep it to accent labels. */
+  --violet: #7c6cff; /* 4.9:1 */
+  --cyan: #45d6e5; /* 9.8:1 */
+  --emerald: #6fe39a; /* 11.4:1 */
+  --amber: #ffb454; /* 10.6:1 */
+  --rose: #ff6f91; /* 7.1:1 */
+
+  --progress-gradient: linear-gradient(
+    180deg,
+    #7c6cff 0%,
+    #45d6e5 35%,
+    #6fe39a 60%,
+    #ffb454 80%,
+    #ff6f91 100%
+  );
+}
+
+/* ================================================================
+   Base
+   ================================================================ */
+
+@layer base {
+  html {
+    /* §6.1: we restore scroll position ourselves once the rig exists,
+       so the browser must not fight us for it. Harmless in Phase 1. */
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--void);
+    color: var(--ink-primary);
+    font-family: var(--font-sans), system-ui, sans-serif;
+    font-size: 16.5px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Sentence case throughout, no all-caps eyebrows (§3.2). */
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display), Georgia, serif;
+    font-weight: 400;
+    text-wrap: balance;
+  }
+
+  /* §10.1: visible focus ring on everything focusable, 2px at 2px offset.
+     Not :focus-visible alone — users may arrive here via script-driven
+     focus (e.g. the contact form moving focus to the first invalid field),
+     and :focus-visible does not always match in that case. */
+  :focus {
+    outline: 2px solid var(--ink-primary);
+    outline-offset: 2px;
+  }
+
+  /* On light utility surfaces the light ring would vanish. */
+  .utility-surface :focus {
+    outline-color: var(--utility-ink);
+  }
+
+  ::selection {
+    background: var(--violet);
+    color: var(--ink-primary);
+  }
+}
+
+/* ================================================================
+   Components
+   ================================================================ */
+
+@layer components {
+  /* §3.3: max-width 1180px, side padding 40px desktop / 24px mobile. */
+  .container-prism {
+    width: 100%;
+    max-width: 1180px;
+    margin-inline: auto;
+    padding-inline: 24px;
+  }
+
+  @media (min-width: 768px) {
+    .container-prism {
+      padding-inline: 40px;
+    }
+  }
+
+  /* §3.3: section vertical rhythm 140px desktop / 80px mobile. */
+  .section-rhythm {
+    padding-block: 80px;
+  }
+
+  @media (min-width: 768px) {
+    .section-rhythm {
+      padding-block: 140px;
+    }
+  }
+
+  /* Small mono label. Sentence case — the live site uppercases these via
+     CSS, which §3.2 explicitly rules out for the rebuild. */
+  .overline {
+    font-family: var(--font-mono), ui-monospace, monospace;
+    font-size: 12px;
+    letter-spacing: 0.02em;
+    color: var(--ink-muted);
+  }
+
+  .measure {
+    max-width: 640px;
+  }
+
+  /* Hairline grid used for card clusters on dark surfaces. */
+  .hairline-grid {
+    border: 1px solid rgba(237, 239, 242, 0.1);
+    gap: 1px;
+    background-color: rgba(237, 239, 242, 0.1);
+  }
+
+  .hairline-cell {
+    background-color: var(--void-2);
+  }
+
+  /* Skip link: first focusable element, visible only when focused (§10.1). */
+  .skip-link {
+    position: absolute;
+    left: -9999px;
+    top: 0;
+    z-index: 100;
+  }
+
+  .skip-link:focus {
+    left: 8px;
+    top: 8px;
+    padding: 12px 16px;
+    background: var(--ink-primary);
+    color: var(--void);
+    font-weight: 500;
+  }
+
+  /* The logo's supplied PNG has an opaque white background and no
+     transparent variant exists, so it sits on a white plate — which is
+     what the live site's navy footer already does. This is not a
+     licence to key out the background (spec §13.2 item 18). */
+  .logo-plate {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: #ffffff;
+    border-radius: 4px;
+    padding: 8px 10px;
+  }
+}
+
+/* ================================================================
+   prefers-reduced-motion — spec §10.2
+   Content, layout and reading order stay identical. A different motion
+   treatment of the same site, not a lesser site.
+   ================================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ================================================================
+   prefers-contrast — spec §10.1
+   Raise --ink-muted toward --ink-primary. (Film grain is dropped in the
+   post-FX chain from Phase 3; there is none to drop yet.)
+   ================================================================ */
+
+@media (prefers-contrast: more) {
+  :root {
+    --ink-muted: #c3c8d2;
+    --utility-muted: #2c2f35;
+  }
+}

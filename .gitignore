@@ -1,0 +1,29 @@
+# Dependencies
+node_modules/
+
+# Next.js build output
+.next/
+out/
+build/
+
+# Environment — never commit real values.
+# .env.example is the committed template and is explicitly re-included;
+# it holds only variable names and comments (see spec §9, §13.4).
+.env*
+!.env.example
+
+# TypeScript / Next generated
+*.tsbuildinfo
+next-env.d.ts
+
+# Editor / OS
+.DS_Store
+Thumbs.db
+
+# Claude Code machine-local settings. .claude/launch.json is shared dev-server
+# config and stays tracked; settings.local.json holds per-machine permission
+# grants and has no meaning in another checkout.
+.claude/settings.local.json
+
+# Deploy
+.vercel
