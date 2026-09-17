@@ -35,6 +35,22 @@ const nextConfig = {
     remotePatterns: [],
   },
 
+  /**
+   * Load shaders/*.vert|frag as raw strings so the GLSL can live in real
+   * .vert/.frag files per §5.1's directory layout instead of being inlined
+   * as template literals in TypeScript.
+   *
+   * `asset/source` is built into webpack 5 — no loader dependency, which
+   * matters because §4 pins the dependency set and forbids additions.
+   */
+  webpack(config) {
+    config.module.rules.push({
+      test: /\.(vert|frag|glsl)$/,
+      type: 'asset/source',
+    });
+    return config;
+  },
+
   async headers() {
     /** @type {{ key: string, value: string }[]} */
     const securityHeaders = [

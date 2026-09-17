@@ -1,7 +1,9 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Faq } from '@/components/dom/Faq';
+import { HeroStage } from '@/components/dom/HeroStage';
 import { Card, Section, SectionHeader } from '@/components/dom/Section';
+import { HeroSceneMount } from '@/components/scenes/HeroSceneMount';
 import { home } from '@/content/site';
 import { bands } from '@/lib/theme';
 
@@ -30,8 +32,20 @@ export const metadata: Metadata = {
 export default function HomePage() {
   return (
     <>
-      {/* ── Hero ───────────────────────────────────────────────── */}
-      <section className="border-b border-white/10 bg-[color:var(--void)]">
+      {/*
+        ── Hero ─────────────────────────────────────────────────
+
+        `HeroSceneMount` portals the Phase 2 scene into the persistent canvas
+        (§5.2). `HeroStage` adds the scroll runway that drives it.
+
+        Both are inert when 3D is inactive: at tier `none` or with JS
+        disabled the markup below renders in normal flow, exactly as it did
+        in Phase 1. Nothing here is conditional on the canvas existing.
+      */}
+      <HeroSceneMount />
+
+      <HeroStage>
+      <section className="flex min-h-screen items-center border-b border-white/10">
         <div className="container-prism pt-16 pb-20 md:pt-24 md:pb-28">
           <p className="overline flex items-center gap-3">
             <span aria-hidden="true" className="h-px w-12 bg-white/25" />
@@ -71,6 +85,7 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+      </HeroStage>
 
       {/* ── Four service pillars ───────────────────────────────── */}
       <Section labelledBy="value-props-heading">

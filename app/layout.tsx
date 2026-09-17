@@ -2,6 +2,8 @@ import type { Metadata } from 'next';
 import { Instrument_Serif, Inter, IBM_Plex_Mono } from 'next/font/google';
 import { Nav } from '@/components/dom/Nav';
 import { Footer } from '@/components/dom/Footer';
+import { CanvasHost } from '@/components/canvas/CanvasHost';
+import { TierProvider } from '@/components/canvas/TierProvider';
 import { site, ui } from '@/content/site';
 import './globals.css';
 
@@ -114,25 +116,46 @@ function structuredData() {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang={site.lang} className={`${display.variable} ${sans.variable} ${mono.variable}`}>
-      <body className="flex min-h-screen flex-col">
+      <body className="bg-[color:var(--void)]">
         {/* §10.1: first focusable element on the page. */}
         <a href="#main-content" className="skip-link">
           {ui.skipToContent}
         </a>
 
-        <Nav />
+        <TierProvider>
+          {/*
+            The persistent canvas, mounted once (§5.2). It sits at z-index 0
+            behind the DOM content at z-index 10, and is never mounted at all
+            at tier `none` — on a locked-down enterprise desktop the three.js
+            chunk is never even fetched (§5.4).
+          */}
+          <CanvasHost />
 
-        {/*
-          Phase 1 is deliberately zero-WebGL (§12). The persistent <Canvas>
-          and the r3f tunnel Out arrive in Phase 2, mounted here behind this
-          content at z-index 0. Everything below must keep reading correctly
-          with the canvas absent — that is the test for §10 being satisfied.
-        */}
-        <main id="main-content" className="flex-1">
-          {children}
-        </main>
+          {/*
+            `app-root` is the Canvas `eventSource` (§5.2): it is what lets
+            pointer events reach 3D objects *through* this full-screen DOM
+            overlay. Without it nothing in the scene is clickable the moment
+            the overlay exists, and the failure looks like a raycasting bug.
+          */}
+          <div
+            id="app-root"
+            className="relative z-10 flex min-h-screen flex-col"
+            style={{ pointerEvents: 'auto' }}
+          >
+            <Nav />
 
-        <Footer />
+            {/*
+              The test for §10 being satisfied: delete the canvas and this
+              still reads correctly top to bottom. It does — the canvas is
+              decorative and every string lives out here.
+            */}
+            <main id="main-content" className="flex-1">
+              {children}
+            </main>
+
+            <Footer />
+          </div>
+        </TierProvider>
 
         <script
           type="application/ld+json"

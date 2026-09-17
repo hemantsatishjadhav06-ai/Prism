@@ -51,9 +51,13 @@
 
 @layer base {
   html {
-    /* §6.1: we restore scroll position ourselves once the rig exists,
-       so the browser must not fight us for it. Harmless in Phase 1. */
-    scroll-behavior: smooth;
+    /* NO `scroll-behavior: smooth`.
+       It fights ScrollTrigger: the browser animates scroll position while
+       the rig is scrubbing from it, which shows up as lag and jitter during
+       scrub — and it also swallows programmatic scrolls, which makes the
+       whole rig hard to test. §6.1 does click-to-jump with GSAP's own
+       ScrollToPlugin tween instead, so the camera follows for free and
+       there is nothing for CSS to add. */
     -webkit-text-size-adjust: 100%;
   }
 
