@@ -5,8 +5,43 @@ import { use3DActive, useTier } from '@/lib/tier';
 import {
   HOME_SECTIONS,
   homeScrollVh,
+  mapScrollToResolve,
   scrollState,
 } from '@/lib/scroll';
+
+/** Max upward parallax drift of the hero content, in px, across the runway. */
+const HERO_PARALLAX_PX = 60;
+
+/**
+ * Hero DOM colour ramps for the dark → light resolve, as [dark, light] hex.
+ * Interpolated in JS (below) rather than via CSS `color-mix()` so the wash
+ * works on every browser the enterprise audience might arrive with, not only
+ * post-2023 ones. The dark ends match the §3.1 tokens; the light ends match
+ * lib/theme.ts and the light-blue ground. See docs/DESIGN-hero-light-resolve.md.
+ */
+const HERO_RAMPS = {
+  '--hero-ink': ['#EDEFF2', '#101828'],
+  '--hero-muted': ['#8990A0', '#41506A'],
+  '--hero-accent': ['#7C6CFF', '#1F5FAE'],
+  '--hero-cta-bg': ['#EDEFF2', '#2F7FD1'],
+  '--hero-cta-ink': ['#05060A', '#FFFFFF'],
+} as const;
+
+/** Hairline that rides the same ramp but keeps a constant low alpha. */
+const HERO_LINE = { dark: [237, 239, 242], light: [16, 24, 40], alpha: 0.18 } as const;
+
+function hexToRgb(hex: string): [number, number, number] {
+  const n = parseInt(hex.slice(1), 16);
+  return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+}
+
+/** Linear hex→hex interpolation returning an `rgb()` string. */
+function lerpHex(a: string, b: string, t: number): string {
+  const [ar, ag, ab] = hexToRgb(a);
+  const [br, bg, bb] = hexToRgb(b);
+  const c = (x: number, y: number) => Math.round(x + (y - x) * t);
+  return `rgb(${c(ar, br)}, ${c(ag, bg)}, ${c(ab, bb)})`;
+}
 
 /**
  * HeroStage — the scroll driver for the Hero (spec §6.1).
@@ -65,8 +100,31 @@ export function HeroStage({ children }: { children: React.ReactNode }) {
        * mapHomeScrollToT keeps working against §6.1's table unchanged when
        * Phase 4 lengthens the wrapper.
        */
+      const root = document.documentElement;
+
       const write = (progress: number) => {
         scrollState.progress = progress * heroScrollEnd;
+        /**
+         * `resolve` and the two CSS custom properties are all pure functions
+         * of scroll — the §6.1 purity rule, extended to the wash and the
+         * parallax. Writing CSS vars is not `setState`: no React re-render,
+         * so INP is untouched. The 3D backdrop reads `scrollState.resolve`;
+         * the DOM reads `--resolve` (colour) and `--hero-shift` (transform).
+         */
+        const r = mapScrollToResolve(scrollState.progress);
+        scrollState.resolve = r;
+        root.style.setProperty('--resolve', r.toFixed(4));
+        // transform-only, per the §6.5 HUD rule — never top/left/width/height.
+        root.style.setProperty('--hero-shift', `${(-progress * HERO_PARALLAX_PX).toFixed(2)}px`);
+        // Ink/accent/CTA colours cross-fade dark → light so the copy stays AA
+        // legible as the ground behind it lightens.
+        for (const [prop, [dark, light]] of Object.entries(HERO_RAMPS)) {
+          root.style.setProperty(prop, lerpHex(dark, light, r));
+        }
+        const [lr, lg, lb] = HERO_LINE.dark.map((d, i) =>
+          Math.round(d + (HERO_LINE.light[i]! - d) * r),
+        );
+        root.style.setProperty('--hero-line', `rgba(${lr}, ${lg}, ${lb}, ${HERO_LINE.alpha})`);
       };
 
       const trigger = ScrollTrigger.create({
@@ -125,6 +183,14 @@ export function HeroStage({ children }: { children: React.ReactNode }) {
       cleanup?.();
       scrollState.progress = 0;
       scrollState.t = 0;
+      // Leaving Home must not strand the wash: reset resolve and clear the DOM
+      // tokens so the CSS :root defaults (dark palette) take back over.
+      scrollState.resolve = 0;
+      const s = document.documentElement.style;
+      s.setProperty('--resolve', '0');
+      s.setProperty('--hero-shift', '0px');
+      for (const prop of Object.keys(HERO_RAMPS)) s.removeProperty(prop);
+      s.removeProperty('--hero-line');
     };
   }, [active]);
 

@@ -22,6 +22,20 @@ export const surfaces = {
   utilityBg: '#F1F1EE',
   utilityInk: '#14161A',
   utilityMuted: '#5B5F68',
+  /**
+   * Light-resolve endpoints (docs/DESIGN-hero-light-resolve.md). The scene
+   * background lerps `void → voidLight` across the hero as `scrollState.resolve`
+   * goes 0 → 1, giving the Apple-style light-blue arrival. Mirrored as the DOM
+   * `--surface-lite` in app/globals.css so canvas and DOM lighten in step (§3.1).
+   */
+  voidLight: '#E9F1FD',
+  /**
+   * Particle colour at full resolve. Additive blending can only lighten, so on
+   * the light ground the field is faded down rather than relied on for contrast
+   * (HeroScene drops its opacity as resolve→1); this cooler blue keeps the brief
+   * mid-transition tint coherent with the brand.
+   */
+  particleResolved: '#2F7FD1',
 } as const;
 
 /**

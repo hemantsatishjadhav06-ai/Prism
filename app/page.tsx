@@ -45,10 +45,21 @@ export default function HomePage() {
       <HeroSceneMount />
 
       <HeroStage>
-      <section className="flex min-h-screen items-center border-b border-white/10">
-        <div className="container-prism pt-16 pb-20 md:pt-24 md:pb-28">
-          <p className="overline flex items-center gap-3">
-            <span aria-hidden="true" className="h-px w-12 bg-white/25" />
+      <section className="flex min-h-screen items-center border-b border-[color:var(--hero-line)]">
+        {/*
+          The hero content drifts up as you scroll (parallax) while the fixed
+          canvas washes dark→light-blue behind it. `--hero-shift` is a
+          scroll-derived transform written by HeroStage (§6.1, §6.5); it is
+          0px at rest, under prefers-reduced-motion, and with JS disabled, so
+          the static hero is unchanged. Colours ride the same scroll via the
+          `--hero-*` tokens, staying legible as the ground lightens.
+        */}
+        <div
+          className="container-prism pt-16 pb-20 md:pt-24 md:pb-28"
+          style={{ transform: 'translateY(var(--hero-shift))', willChange: 'transform' }}
+        >
+          <p className="overline flex items-center gap-3 text-[color:var(--hero-muted)]">
+            <span aria-hidden="true" className="h-px w-12" style={{ backgroundColor: 'var(--hero-line)' }} />
             {home.hero.overline}
           </p>
 
@@ -58,27 +69,29 @@ export default function HomePage() {
             particles form the PRISM wordmark behind it, not this sentence.
             The LCP element must be this <h1>, never the canvas (§11.1).
           */}
-          <h1 className="mt-6 text-display-xl text-[color:var(--ink-primary)]">
+          <h1 className="mt-6 text-display-xl text-[color:var(--hero-ink)]">
             {home.hero.heading.line1}{' '}
-            <span className="block text-[color:var(--violet)]">
+            <span className="block text-[color:var(--hero-accent)]">
               {home.hero.heading.line2}
             </span>
           </h1>
 
-          <p className="mt-8 max-w-2xl text-lg text-[color:var(--ink-muted)]">
+          <p className="mt-8 max-w-2xl text-lg text-[color:var(--hero-muted)]">
             {home.hero.lead}
           </p>
 
           <div className="mt-10 flex flex-wrap gap-3">
             <Link
               href={home.hero.primaryCta.href}
-              className="inline-flex h-12 items-center rounded-md bg-[color:var(--ink-primary)] px-6 font-medium text-[color:var(--void)] transition-colors hover:bg-white"
+              className="inline-flex h-12 items-center rounded-md px-6 font-medium transition-colors"
+              style={{ backgroundColor: 'var(--hero-cta-bg)', color: 'var(--hero-cta-ink)' }}
             >
               {home.hero.primaryCta.label}
             </Link>
             <Link
               href={home.hero.secondaryCta.href}
-              className="inline-flex h-12 items-center rounded-md border border-white/20 px-6 font-medium text-[color:var(--ink-primary)] transition-colors hover:bg-white/5"
+              className="inline-flex h-12 items-center rounded-md border px-6 font-medium transition-colors"
+              style={{ borderColor: 'var(--hero-line)', color: 'var(--hero-ink)' }}
             >
               {home.hero.secondaryCta.label}
             </Link>

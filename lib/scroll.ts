@@ -36,7 +36,36 @@ export const scrollState = {
    * Derived from scroll like everything else — never set imperatively.
    */
   heroFormation: 0,
+  /**
+   * Light-resolve progress, 0 = dark void, 1 = fully resolved light-blue.
+   * Drives the backdrop wash, the particle fade, and the DOM `--resolve`
+   * token. Derived from scroll (see `mapScrollToResolve`) exactly like `t`
+   * and `heroFormation` — never written imperatively from a click or hover.
+   * See docs/DESIGN-hero-light-resolve.md.
+   */
+  resolve: 0,
 };
+
+/**
+ * Scroll fraction at which the light resolve completes (1.0).
+ *
+ * The wordmark formation finishes early — by scroll 0.05 (HeroScene) — so the
+ * name assembles while the scene is still dark; the backdrop then keeps
+ * washing to light and settles a touch later, at this fraction, so "resolved"
+ * reads as an arrival into clarity rather than a simultaneous flash. Kept
+ * separate from the camera table (§6.1) so the wash can be re-timed without
+ * touching camera motion.
+ */
+export const RESOLVE_SCROLL_END = 0.1;
+
+/**
+ * Map Home scroll progress (0–1 over the whole Home runway) to light-resolve
+ * progress (0–1). Pure function of scroll — the §6.1 purity rule applies to
+ * `resolve` exactly as it does to `t`.
+ */
+export function mapScrollToResolve(progress: number): number {
+  return clamp01(progress / RESOLVE_SCROLL_END);
+}
 
 /**
  * Home section table — spec §6.1, verbatim.

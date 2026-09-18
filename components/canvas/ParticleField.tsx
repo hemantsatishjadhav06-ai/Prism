@@ -27,6 +27,19 @@ export interface ParticleFieldProps {
   /** Base point size in px, from the tier budget. */
   size: number;
   opacity?: number;
+  /**
+   * Colour at full light-resolve. Omit to disable the resolve cross-fade
+   * (defaults to `color`, so mix() is a no-op). See
+   * docs/DESIGN-hero-light-resolve.md.
+   */
+  colorResolved?: string;
+  /** Opacity at full light-resolve. Defaults to `opacity` (no fade). */
+  opacityResolved?: number;
+  /**
+   * Scroll-derived light-resolve, 0–1, read every frame. A ref, never React
+   * state. Omit to hold the field at its dark appearance (resolve 0).
+   */
+  resolveRef?: React.MutableRefObject<number>;
   /** 0 freezes the idle drift, for prefers-reduced-motion (§10.2). */
   driftScale?: number;
   position?: [number, number, number];
@@ -39,6 +52,9 @@ export function ParticleField({
   color,
   size,
   opacity = 1,
+  colorResolved,
+  opacityResolved,
+  resolveRef,
   driftScale = 1,
   position = [0, 0, 0],
 }: ParticleFieldProps) {
@@ -90,6 +106,9 @@ export function ParticleField({
         uDriftScale: { value: driftScale },
         uColor: { value: new THREE.Color(color) },
         uOpacity: { value: opacity },
+        uColorResolved: { value: new THREE.Color(colorResolved ?? color) },
+        uOpacityResolved: { value: opacityResolved ?? opacity },
+        uResolve: { value: 0 },
       },
       transparent: true,
       blending: THREE.AdditiveBlending,
@@ -107,7 +126,9 @@ export function ParticleField({
     material.uniforms.uDriftScale!.value = driftScale;
     material.uniforms.uOpacity!.value = opacity;
     (material.uniforms.uColor!.value as THREE.Color).set(color);
-  }, [material, size, driftScale, opacity, color]);
+    material.uniforms.uOpacityResolved!.value = opacityResolved ?? opacity;
+    (material.uniforms.uColorResolved!.value as THREE.Color).set(colorResolved ?? color);
+  }, [material, size, driftScale, opacity, color, colorResolved, opacityResolved]);
 
   /**
    * Mandatory disposal (§5.3). The WebGL context never tears down across
@@ -143,6 +164,9 @@ export function ParticleField({
 
   useFrame((_, delta) => {
     material.uniforms.uProgress!.value = progressRef.current;
+    // Scroll-derived light-resolve; 0 when no ref is supplied, so the field
+    // holds its dark appearance and the mix() in the shader is a no-op.
+    material.uniforms.uResolve!.value = resolveRef ? resolveRef.current : 0;
     // Advance from delta rather than clock.elapsedTime so that a paused
     // frameloop (frameloop="never" over flat sections, §6.5) does not make
     // the field jump when it resumes.

@@ -7,6 +7,7 @@ import * as THREE from 'three';
 import { r3f } from '@/lib/tunnel';
 import { TIER_BUDGETS, useTier, type ActiveTier } from '@/lib/tier';
 import { scrollState } from '@/lib/scroll';
+import { BackdropWash } from './BackdropWash';
 import { CameraRig } from './CameraRig';
 
 /**
@@ -150,6 +151,15 @@ export function SceneCanvas() {
         />
 
         <CameraRig reducedMotion={reducedMotion} />
+
+        {/*
+          Scroll-driven dark → light-blue backdrop wash
+          (docs/DESIGN-hero-light-resolve.md). Lerps scene.background /
+          clear colour from `scrollState.resolve`, which only Home's hero
+          runway ever drives; on every other route resolve stays 0 and the
+          background holds at the void.
+        */}
+        <BackdropWash />
 
         {/*
           Lighting re-derived for three r155+ physically-correct lights

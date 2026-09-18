@@ -114,12 +114,24 @@ export function HeroScene() {
    */
   const progressRef = useRef(reducedMotion ? 1 : 0);
 
+  /**
+   * Light-resolve for the particle field, as a ref (never state — read every
+   * frame, §6.1). Mirrors `scrollState.resolve`, which HeroStage derives from
+   * scroll. Held at 0 under reduced motion: the reduced-motion hero is the
+   * resolved *wordmark* on the resting dark palette, with no wash (§10.2,
+   * docs/DESIGN-hero-light-resolve.md).
+   */
+  const resolveRef = useRef(0);
+
   useFrame(() => {
     if (reducedMotion) {
       progressRef.current = 1;
       scrollState.heroFormation = 1;
+      resolveRef.current = 0;
       return;
     }
+
+    resolveRef.current = scrollState.resolve;
 
     /**
      * Formation is driven by scroll and nothing else (§6.1's purity rule).
@@ -153,6 +165,16 @@ export function HeroScene() {
         target={target}
         progressRef={progressRef}
         color={surfaces.inkPrimary}
+        /**
+         * As the backdrop washes to light-blue the additive field would stack
+         * into a haze over the bright ground (additive can only lighten), so it
+         * fades almost out — the resolved name is carried by the DOM <h1>, not
+         * the particles. The cooler brand blue only reads through the brief
+         * mid-transition. See docs/DESIGN-hero-light-resolve.md.
+         */
+        colorResolved={surfaces.particleResolved}
+        opacityResolved={0.05}
+        resolveRef={resolveRef}
         size={budget.pointSize}
         /**
          * §7.2 calls for `--ink-primary` at LOW opacity, and it means it.
