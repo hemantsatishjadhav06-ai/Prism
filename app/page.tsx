@@ -47,16 +47,22 @@ export default function HomePage() {
       <HeroStage>
       <section className="flex min-h-screen items-center border-b border-[color:var(--hero-line)]">
         {/*
-          The hero content drifts up as you scroll (parallax) while the fixed
-          canvas washes dark→light-blue behind it. `--hero-shift` is a
-          scroll-derived transform written by HeroStage (§6.1, §6.5); it is
-          0px at rest, under prefers-reduced-motion, and with JS disabled, so
-          the static hero is unchanged. Colours ride the same scroll via the
-          `--hero-*` tokens, staying legible as the ground lightens.
+          The hero content drifts up (parallax) and releases (opacity) as you
+          scroll, while the fixed canvas washes dark→light-blue behind it.
+          `--hero-shift` and `--hero-opacity` are scroll-derived, transform-
+          and opacity-only per §6.1/§6.5; both are inert at rest, under
+          prefers-reduced-motion, and with JS disabled, so the static hero is
+          unchanged (0px shift, fully opaque). The copy keeps its light
+          `--hero-*` colours and fades out before the ground lightens into the
+          low-contrast zone, so it is always AA-legible while visible.
         */}
         <div
           className="container-prism pt-16 pb-20 md:pt-24 md:pb-28"
-          style={{ transform: 'translateY(var(--hero-shift))', willChange: 'transform' }}
+          style={{
+            transform: 'translateY(var(--hero-shift))',
+            opacity: 'var(--hero-opacity)',
+            willChange: 'transform, opacity',
+          }}
         >
           <p className="overline flex items-center gap-3 text-[color:var(--hero-muted)]">
             <span aria-hidden="true" className="h-px w-12" style={{ backgroundColor: 'var(--hero-line)' }} />

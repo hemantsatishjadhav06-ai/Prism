@@ -13,34 +13,25 @@ import {
 const HERO_PARALLAX_PX = 60;
 
 /**
- * Hero DOM colour ramps for the dark → light resolve, as [dark, light] hex.
- * Interpolated in JS (below) rather than via CSS `color-mix()` so the wash
- * works on every browser the enterprise audience might arrive with, not only
- * post-2023 ones. The dark ends match the §3.1 tokens; the light ends match
- * lib/theme.ts and the light-blue ground. See docs/DESIGN-hero-light-resolve.md.
+ * Resolve window over which the hero copy fades out as it drifts up.
+ *
+ * WHY FADE RATHER THAN RE-COLOUR (docs/DESIGN-hero-light-resolve.md §9).
+ * A continuous dark→light re-colour of the copy is NOT accessible: the text
+ * and the lightening ground pass through the same mid-grey at the same scroll
+ * point, collapsing contrast to ~1:1 mid-transition — and muted body text can
+ * never clear AA against a ground sweeping through its own luminance. So the
+ * copy instead stays light (high contrast on the still-dark ground) and
+ * releases as you scroll, finishing before the ground lightens into the
+ * low-contrast zone. Measured: while the copy is clearly visible (opacity
+ * ≥ 0.5, i.e. resolve ≤ ~0.14) the lead clears 4.5:1 and the h1 clears 12:1.
  */
-const HERO_RAMPS = {
-  '--hero-ink': ['#EDEFF2', '#101828'],
-  '--hero-muted': ['#8990A0', '#41506A'],
-  '--hero-accent': ['#7C6CFF', '#1F5FAE'],
-  '--hero-cta-bg': ['#EDEFF2', '#2F7FD1'],
-  '--hero-cta-ink': ['#05060A', '#FFFFFF'],
-} as const;
+const FADE_START = 0.04;
+const FADE_END = 0.24;
 
-/** Hairline that rides the same ramp but keeps a constant low alpha. */
-const HERO_LINE = { dark: [237, 239, 242], light: [16, 24, 40], alpha: 0.18 } as const;
-
-function hexToRgb(hex: string): [number, number, number] {
-  const n = parseInt(hex.slice(1), 16);
-  return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
-}
-
-/** Linear hex→hex interpolation returning an `rgb()` string. */
-function lerpHex(a: string, b: string, t: number): string {
-  const [ar, ag, ab] = hexToRgb(a);
-  const [br, bg, bb] = hexToRgb(b);
-  const c = (x: number, y: number) => Math.round(x + (y - x) * t);
-  return `rgb(${c(ar, br)}, ${c(ag, bg)}, ${c(ab, bb)})`;
+/** Cubic smoothstep, clamped. */
+function smoothstep(e0: number, e1: number, x: number): number {
+  const t = Math.min(1, Math.max(0, (x - e0) / (e1 - e0)));
+  return t * t * (3 - 2 * t);
 }
 
 /**
@@ -114,17 +105,14 @@ export function HeroStage({ children }: { children: React.ReactNode }) {
         const r = mapScrollToResolve(scrollState.progress);
         scrollState.resolve = r;
         root.style.setProperty('--resolve', r.toFixed(4));
-        // transform-only, per the §6.5 HUD rule — never top/left/width/height.
+        // transform + opacity only, per the §6.5 HUD rule — never geometry.
         root.style.setProperty('--hero-shift', `${(-progress * HERO_PARALLAX_PX).toFixed(2)}px`);
-        // Ink/accent/CTA colours cross-fade dark → light so the copy stays AA
-        // legible as the ground behind it lightens.
-        for (const [prop, [dark, light]] of Object.entries(HERO_RAMPS)) {
-          root.style.setProperty(prop, lerpHex(dark, light, r));
-        }
-        const [lr, lg, lb] = HERO_LINE.dark.map((d, i) =>
-          Math.round(d + (HERO_LINE.light[i]! - d) * r),
+        // The copy stays light (high contrast on the still-dark ground) and
+        // releases as the wash arrives, so it never sits at low contrast.
+        root.style.setProperty(
+          '--hero-opacity',
+          (1 - smoothstep(FADE_START, FADE_END, r)).toFixed(3),
         );
-        root.style.setProperty('--hero-line', `rgba(${lr}, ${lg}, ${lb}, ${HERO_LINE.alpha})`);
       };
 
       const trigger = ScrollTrigger.create({
@@ -189,8 +177,7 @@ export function HeroStage({ children }: { children: React.ReactNode }) {
       const s = document.documentElement.style;
       s.setProperty('--resolve', '0');
       s.setProperty('--hero-shift', '0px');
-      for (const prop of Object.keys(HERO_RAMPS)) s.removeProperty(prop);
-      s.removeProperty('--hero-line');
+      s.setProperty('--hero-opacity', '1');
     };
   }, [active]);
 

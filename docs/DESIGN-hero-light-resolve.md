@@ -118,11 +118,14 @@ Fallback: `@supports not (color-mix(...))` and the no-JS / `:root` default both
 resolve to today's dark values, so nothing breaks where `color-mix` or JS is
 absent.
 
-### 4.4 Parallax content (CSS transform)
-The hero inner element uses `transform: translateY(var(--hero-shift, 0))`.
-`--hero-shift` is written in `onUpdate` as a function of scroll (drift range
-±~120px, eased), `transform`-only per §6.5. No opacity gate at rest — the copy
-is fully visible in the first frame (§ artifact/first-frame rule and §11.2).
+### 4.4 Parallax content (CSS transform + opacity)
+The hero inner element uses `transform: translateY(var(--hero-shift))` and
+`opacity: var(--hero-opacity)`, both scroll-derived, `transform`/`opacity`-only
+per §6.5. `--hero-shift` drifts up to −60px across the runway; `--hero-opacity`
+releases the copy over resolve `[0.04, 0.24]`. At rest both are inert — 0px
+shift, full opacity — so the copy is fully visible in the first frame (§11.2)
+and the static/SSR hero is unchanged. **The copy keeps its light colours and
+fades rather than re-colouring — see §9 for why this is the AA-safe choice.**
 
 ---
 
@@ -195,3 +198,51 @@ practice.
 
 Every change is additive or a token swap; none alters the five URLs, the copy,
 or the dependency set.
+
+---
+
+## 9. As-built amendments (contrast & scope)
+
+Two things changed between this plan and the shipped code, both recorded here
+so the doc matches `main`.
+
+### 9.1 The hero copy fades; it does not re-colour
+
+§4.3–§4.4 originally proposed cross-fading the hero text colour dark→light
+(via `color-mix`, later JS interpolation) so it would stay legible on the
+lightening ground. **Measured contrast proved this is not achievable.** As the
+backdrop lerps `#05060A → #E9F1FD`, it passes through mid-grey; any text that
+also interpolates light→dark passes through mid-grey at the same scroll point,
+and the two collide:
+
+| resolve | backdrop | h1 (linear re-colour) | lead (linear re-colour) |
+| --- | --- | --- | --- |
+| 0.00 | near-black | 17.6:1 | 6.3:1 |
+| 0.25 | dark-grey | 5.2:1 | 2.6:1 ✗ |
+| 0.50 | mid-grey | **1.1:1 ✗** | **1.2:1 ✗** |
+| 0.75 | light-grey | 4.1:1 | 3.1:1 ✗ |
+| 1.00 | light-blue | 15.6:1 | 7.2:1 |
+
+Muted body text can never clear AA against a ground sweeping through its own
+luminance, and no crossover timing removes the collision — it only moves it.
+
+**Resolution:** the copy keeps its light `--hero-*` colours and instead
+**releases** (opacity 1 → 0 over resolve `[0.04, 0.24]`, `smoothstep`) as it
+drifts up. It is therefore always light-on-dark while visible. Measured: while
+the copy is clearly visible (opacity ≥ 0.5, resolve ≤ ~0.14) the h1 holds
+≥ 12:1 and the lead ≥ 4.5:1. The bright light-blue phase belongs to the
+resolved scene and the downstream content, not to small hero body text. This
+keeps the approved dark→light wash and the parallax drift; the only behavioural
+change from the prototype is that the copy fades out instead of persisting at
+full opacity over the light ground.
+
+### 9.2 Scope: hero only
+
+The DOM wash is scoped to the hero (where the canvas shows through), per the
+client's "just the animation colouring, don't change the whole output." The
+`color-mix` surface/ink retheme of downstream sections in §4.3 is **not**
+shipped; those sections keep their existing `void` / `void-2` / `utility`
+backgrounds. `--surface-lite` remains defined for future use. Particle colour
+still carries `uColorResolved`, but because additive blending only lightens,
+the field's *fade* (opacity → 0.05) is what does the real work on the light
+ground; the colour shift only reads through the brief mid-transition.
