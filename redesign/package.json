@@ -1,0 +1,8 @@
+{
+  "name": "prism-healthcare-website",
+  "private": true,
+  "version": "2.0.0",
+  "type": "module",
+  "scripts": {"start": "node server.mjs", "dev": "node --watch server.mjs"},
+  "engines": {"node": ">=22"}
+}
