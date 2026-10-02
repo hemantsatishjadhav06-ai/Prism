@@ -77,6 +77,44 @@ if (heroVideo && videoButton) {
   });
   updateVideoButton();
 }
+const headlines = document.getElementById('hero-headlines');
+const headlineButton = document.querySelector('.headline-control');
+if (headlines && headlineButton) {
+  const slides = [...headlines.querySelectorAll('.headline-slide')];
+  const motionPreference = window.matchMedia('(prefers-reduced-motion: reduce)');
+  let current = 0, timer, manuallyPaused = false, visible = true, hovered = false, focused = false;
+  const staticMode = () => motionPreference.matches || navigator.connection?.saveData;
+  const updateHeadlines = () => {
+    clearInterval(timer);
+    const staticText = staticMode();
+    headlines.classList.toggle('is-static', Boolean(staticText));
+    headlineButton.hidden = Boolean(staticText);
+    headlineButton.setAttribute('aria-label', manuallyPaused ? 'Resume scrolling text' : 'Pause scrolling text');
+    headlineButton.querySelector('span:last-child').textContent = manuallyPaused ? 'Resume text' : 'Pause text';
+    headlineButton.querySelector('.headline-control-symbol').textContent = manuallyPaused ? '▷' : 'Ⅱ';
+    if (staticText || manuallyPaused || !visible || hovered || focused || document.hidden) return;
+    timer = setInterval(() => {
+      const next = (current + 1) % slides.length;
+      slides.forEach((slide, index) => {
+        slide.classList.toggle('is-active', index === next);
+        slide.classList.toggle('is-past', index === current);
+      });
+      current = next;
+    }, 6500);
+  };
+  headlineButton.addEventListener('click', () => { manuallyPaused = !manuallyPaused; updateHeadlines(); });
+  const copy = headlines.closest('.hero-copy');
+  copy.addEventListener('mouseenter', () => { hovered = true; updateHeadlines(); });
+  copy.addEventListener('mouseleave', () => { hovered = false; updateHeadlines(); });
+  copy.addEventListener('focusin', () => { focused = true; updateHeadlines(); });
+  copy.addEventListener('focusout', event => { if (!copy.contains(event.relatedTarget)) { focused = false; updateHeadlines(); } });
+  motionPreference.addEventListener('change', updateHeadlines);
+  document.addEventListener('visibilitychange', updateHeadlines);
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(entries => { visible = entries[0].isIntersecting; updateHeadlines(); }, {threshold:0.1}).observe(headlines);
+  }
+  updateHeadlines();
+}
 const form = document.getElementById('inquiry-form');
 const requestedInterest = new URLSearchParams(window.location.search).get('interest');
 const interestSelect = document.getElementById('interest');
