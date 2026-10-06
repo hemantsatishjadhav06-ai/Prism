@@ -4,7 +4,8 @@
 .hero-specialties .hero-background .hero-scene-video{object-position:center;opacity:0;transition:opacity .65s ease;pointer-events:none}
 .hero-specialties .hero-background .hero-scene-video.is-active{opacity:1}
 .hero-specialties.is-poster-only .hero-background .hero-scene-video{opacity:0}
-.hero-specialties:after{background:linear-gradient(90deg,rgba(3,25,45,.96) 0%,rgba(3,25,45,.84) 29%,rgba(3,25,45,.2) 61%,rgba(3,25,45,.06) 100%),linear-gradient(0deg,rgba(3,25,45,.98) 0%,rgba(3,25,45,.78) 20%,transparent 60%)}
+.hero-specialties:after{display:none}
+.hero-specialties .hero-background:before{content:'';position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(90deg,rgba(3,25,45,.96) 0%,rgba(3,25,45,.84) 29%,rgba(3,25,45,.2) 61%,rgba(3,25,45,.06) 100%),linear-gradient(0deg,rgba(3,25,45,.98) 0%,rgba(3,25,45,.78) 20%,transparent 60%)}
 .hero-specialties .hero-main{padding-top:185px;padding-bottom:40px;align-items:center}
 .hero-specialties .hero-copy{max-width:690px}
 .hero-specialties h1{font-size:clamp(72px,6.8vw,104px)}
@@ -44,6 +45,7 @@
 @media(max-width:800px){
  .hero-specialties{min-height:0;overflow:hidden;display:flex;flex-direction:column;background:#041e35}
  .hero-specialties:after{display:none}
+ .hero-specialties .hero-background:before{display:none}
  .hero-specialties .hero-background{position:relative;inset:auto;z-index:0;flex:none;aspect-ratio:16/9;margin-top:125px;width:100%;order:0}
  .hero-specialties .hero-background:after{content:'';position:absolute;inset:40% 0 0;background:linear-gradient(0deg,#041e35ed,transparent);pointer-events:none}
  .hero-specialties .hero-background .hero-scene-video{object-position:center}
