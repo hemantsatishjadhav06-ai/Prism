@@ -44,39 +44,6 @@ tabLists.forEach(list => {
     });
   });
 });
-const heroVideo = document.getElementById('hero-video');
-const videoButton = document.querySelector('.video-control');
-if (heroVideo && videoButton) {
-  let manuallyPaused = false;
-  const autoPlay = !window.matchMedia('(prefers-reduced-motion: reduce)').matches && !navigator.connection?.saveData;
-  const updateVideoButton = () => {
-    const paused = heroVideo.paused;
-    videoButton.setAttribute('aria-label', paused ? 'Play hero video' : 'Pause hero video');
-    videoButton.querySelector('span').textContent = paused ? 'Play video' : 'Pause video';
-    videoButton.querySelector('path').setAttribute('d', paused ? 'M5 3L13 8L5 13Z' : 'M4 3H6V13H4Z M10 3H12V13H10Z');
-  };
-  const playVideo = () => heroVideo.play().catch(updateVideoButton);
-  heroVideo.addEventListener('play', updateVideoButton);
-  heroVideo.addEventListener('pause', updateVideoButton);
-  heroVideo.addEventListener('error', () => { videoButton.hidden = true; });
-  heroVideo.querySelector('source')?.addEventListener('error', () => { videoButton.hidden = true; });
-  videoButton.addEventListener('click', () => {
-    if (heroVideo.paused) { manuallyPaused = false; playVideo(); }
-    else { manuallyPaused = true; heroVideo.pause(); }
-  });
-  if ('IntersectionObserver' in window) {
-    const videoObserver = new IntersectionObserver(entries => {
-      const visible = entries[0].isIntersecting;
-      if (!visible) heroVideo.pause();
-      else if (autoPlay && !manuallyPaused) playVideo();
-    }, {threshold:0.1});
-    videoObserver.observe(heroVideo);
-  } else if (autoPlay) playVideo();
-  document.addEventListener('visibilitychange', () => {
-    if (document.hidden) heroVideo.pause();
-  });
-  updateVideoButton();
-}
 const headlines = document.getElementById('hero-headlines');
 const headlineButton = document.querySelector('.headline-control');
 if (headlines && headlineButton) {

@@ -6,7 +6,7 @@ Editable Figma design: https://www.figma.com/design/F3DuetUfNQbTMlbVvOeFmu
 
 ## Pages
 
-- `/`: healthcare-video hero with scrolling headlines, interactive process, approach, solutions and common questions
+- `/`: four-scene healthcare hero with specialty selection and scrolling headlines, interactive process, approach, solutions and common questions
 - `/products/`: eight modules and an interactive platform lifecycle
 - `/services/`: six services and an engagement process
 - `/about/`: provider perspective, values and specialties
@@ -14,7 +14,7 @@ Editable Figma design: https://www.figma.com/design/F3DuetUfNQbTMlbVvOeFmu
 
 ## Editing
 
-Content and shared HTML are authored in `generate.py`. Run `python generate.py` to regenerate the pages. Styling is in `dist/styles.css` and `dist/refinement.css`; behavior is in `dist/site.js`. Assets and open-source fonts are local.
+Content and shared HTML are authored in `generate.py`. Run `python -X utf8 generate.py` to regenerate the pages. Shared styling is in `dist/styles.css` and `dist/refinement.css`; shared behavior is in `dist/site.js`. Homepage film styling and playback are in `dist/hero-scenes.css` and `dist/hero-scenes.js`. Assets and open-source fonts are local.
 
 ## Run and deploy
 
@@ -27,6 +27,8 @@ For the existing GitHub repository, this app lives in `redesign/`. The Railway s
 ## Design rationale
 
 - Fixed white hero copy sits over a restrained navy gradient on the healthcare film, keeping the core message and consultation action easy to scan.
+- Four numbered scene controls connect emergency registration, anesthesiology, radiology and PRISM's claims office to the platform story. Desktop uses a full-width film; mobile gives the film an unobstructed stage above the headline. The office wall sign uses the exact original PRISM logo.
+- Two video decks crossfade after a decoded incoming frame. Only the active scene and next scene metadata are requested. Playback stops offscreen and in background tabs; reduced-motion and save-data visitors see posters unless they explicitly choose Play. Pausing is preserved when choosing a different scene.
 - Five connected icon stages—intake and eligibility, open negotiation, federal IDR, recovery and reconciliation, and audit-ready records—keep bold labels visible while each selection opens its detail below.
 - The opening text starts with “No Surprise Billing” and scrolls to “Fully Managed IDR Lifecycle”. Text and video have independent pause controls; reduced-motion mode displays both text phrases without animation.
 
@@ -35,7 +37,7 @@ For the existing GitHub repository, this app lives in `redesign/`. The Railway s
 - Content reference: https://prism.inc/ and its products, services, about and contact pages
 - Design reference: https://www.r1rcm.com/
 - Logo: original supplied PRISM transparent PNG
-- Hero: original AI-generated healthcare collaboration video, Kling 3.0 Pro via Fal; 1920 × 1080, 24 fps, 8.04 seconds, silent. The web copy is compressed to about 0.82 MB and has a local still poster.
+- Hero: four illustrative healthcare scenes generated with Kling 3.0 Pro in Higgsfield. Each is silent 1920 × 1080 H.264 at 24 fps, optimized for streaming with a WebP poster. Emergency and anesthesia are 8 seconds each; radiology is an 8.75-second MRI/CT/X-ray edit; the branded claims office is 8 seconds. Together the videos are about 5.21 MB. Exact generation IDs and edits are recorded in `media-provenance.json`.
 - Doctor portrait: existing PRISM site imagery, https://images.pexels.com/photos/19438562/pexels-photo-19438562.jpeg
 - Typefaces: DM Sans and Libre Caslon Display, distributed through Google Fonts
 
@@ -47,4 +49,4 @@ The doctor photograph is illustrative stock imagery. This redesign omits the ori
 
 Browser UI checks, source links, HTTP routes and byte-range behavior have been verified. Source checks also covered navigation targets, fragment links, tab/panel relationships, form field identifiers and JavaScript syntax. The integrated video and scrolling text have independent pause/resume controls. All five process selections and their keyboard controls were checked in the browser. The original footer logo preserves its aspect ratio. Email delivery depends on the visitor's email application.
 
-Video provenance: `fal-ai/kling-video/v3/pro/text-to-video`, request `01a0f329-b765-77c3-af08-ed349a8aa124`. The people and setting are illustrative AI-generated imagery, not PRISM employees or facilities. Estimated generation charge at the retrieved price was USD 1.12.
+The people and settings in the four current hero clips are illustrative generated imagery, not documentary footage of PRISM employees or facilities. The October 2026 update reused existing Higgsfield generations and did not submit new paid generation jobs. The previous collaboration film remains in the asset directory for recovery, but is no longer used on the homepage.

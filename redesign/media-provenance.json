@@ -1,0 +1,18 @@
+{
+  "source": "Higgsfield generation history provided in prism-higgsfield-history.json",
+  "generated_model": "kling3_0",
+  "output_properties": {"width":1920,"height":1080,"fps":24,"video_codec":"H.264","pixel_format":"yuv420p","audio":false,"faststart":true},
+  "clips": [
+    {"file":"prism-emergency.mp4","source_id":"a2452950-4bee-4b4a-8ac6-04988b8941c4","source_file":"prism-media-source/emergency.mp4","edit":"First 8 seconds; silent optimized encode","content":"Hospital registration counter with ER clinician and covered stretcher moving through background corridor"},
+    {"file":"prism-anesthesia.mp4","source_id":"38d3b2ff-97a0-4bb1-b2fe-2ecaa303e757","source_file":"prism-media-source/anesthesia.mp4","edit":"First 8 seconds; silent optimized encode","content":"Operating theatre with anesthesia workstation, breathing circuit, monitor, masked clinician and covered patient"},
+    {"file":"prism-radiology.mp4","duration_seconds":8.75,"edits":[{"source_id":"e6a1e89c-32da-404b-b4f7-9337ece6b764","source_file":"prism-media-source/mri-refined.mp4","from":0,"to":3,"content":"Patient entering deep MRI bore"},{"source_id":"5e2e03a6-648e-4fbe-b8e3-cb13d01c6b12","source_file":"prism-media-source/radiology-original.mp4","from":3.125,"to":5.875,"content":"CT scanner and patient with technician in control room"},{"source_id":"fb601010-6ec7-44f5-9577-95b67c3af5cd","source_file":"prism-media-source/xray-refined.mp4","from":0,"to":3,"content":"Upright patient at detector and radiology technician"}],"rationale":"Refined MRI has a clearer deep bore; refined X-ray includes the patient absent from the original final shot. Original CT section preserved between them."},
+    {"file":"prism-claims-office.mp4","source_id":"047b0aa4-8b5b-4f99-9a6f-db695f074483","source_file":"prism-media-source/office.mp4","edit":"First 8 seconds; exact transparent PRISM source logo composited on fixed backlit wall sign, width470, x1147, y305, rotation-0.017rad, opacity0.94; silent optimized encode","logo_source":"prism-site/redesign/dist/assets/prism-logo-small.png","content":"Three claims specialists reviewing papers and abstract case-management screens under PRISM sign"}
+  ],
+  "review_notes": [
+    "These are generated illustrative scenes, not documentary footage of a real PRISM facility.",
+    "Source footage was preserved separately and no paid regeneration was performed.",
+    "X-ray refinement has correct upright patient/detector layout, but generated overhead tube geometry is stylized. Suitable as background illustration, not a clinical training reference.",
+    "The office sign and doorway were visually compared at first, middle and final timestamps; background geometry is fixed while people move.",
+    "All four outputs include independent WebP posters."
+  ]
+}
