@@ -7,19 +7,23 @@
   const videos = [document.getElementById('hero-video'), document.getElementById('hero-video-next')];
   const buttons = hero ? [...hero.querySelectorAll('.scene-button')] : [];
   const control = hero?.querySelector('.video-control');
+  const player = hero?.querySelector('.hero-player');
+  const fullscreenControl = hero?.querySelector('.fullscreen-control');
   if (!hero || !background || videos.some(video => !video) || !buttons.length || !control) return;
 
   const scenes = buttons.map(button => ({
     video: button.dataset.video,
     poster: button.dataset.poster,
     title: button.dataset.title || button.querySelector('strong')?.textContent || '',
-    description: button.dataset.description || ''
+    description: button.dataset.description || '',
+    points: (button.dataset.points || '').split('|').filter(Boolean)
   }));
   if (scenes.some(scene => !scene.video || !scene.poster)) return;
 
   const title = document.getElementById('scene-title');
   const description = document.getElementById('scene-description');
   const counter = document.getElementById('scene-counter');
+  const points = document.getElementById('scene-points');
   const announcement = document.getElementById('scene-announcement');
   const motionPreference = window.matchMedia('(prefers-reduced-motion: reduce)');
   const connection = navigator.connection;
@@ -47,6 +51,11 @@
   let pending = null;
   let generation = 0;
   let fadeTimer;
+  let nativeFullscreenDeck = null;
+  let inPageExpanded = false;
+  let priorOverflow = '';
+  let expandedFocus = null;
+  let inertBranches = [];
   const initialBounds = background.getBoundingClientRect();
   let visible = initialBounds.bottom > 0 && initialBounds.top < window.innerHeight;
 
@@ -74,6 +83,13 @@
     background.style.backgroundImage = `url(${JSON.stringify(scene.poster)})`;
     if (title) title.textContent = scene.title;
     if (description) description.textContent = scene.description;
+    if (points) {
+      points.replaceChildren(...scene.points.map(point => {
+        const item = document.createElement('li');
+        item.textContent = point;
+        return item;
+      }));
+    }
     if (counter) counter.textContent = `${String(selected + 1).padStart(2, '0')} / ${String(scenes.length).padStart(2, '0')}`;
     buttons.forEach((button, index) => {
       button.setAttribute('aria-pressed', String(index === selected));
@@ -298,6 +314,7 @@
   buttons.forEach((button, index) => {
     button.addEventListener('click', () => selectScene(index, true));
     button.addEventListener('keydown', event => {
+      if (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
       let target;
       if (event.key === 'ArrowRight' || event.key === 'ArrowDown') target = (index + 1) % scenes.length;
       if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') target = (index - 1 + scenes.length) % scenes.length;
@@ -323,9 +340,163 @@
     else synchronize();
   });
 
+  function canFullscreenPlayer() {
+    return Boolean(player && (player.requestFullscreen || player.webkitRequestFullscreen));
+  }
+
+  function fullscreenElement() {
+    return document.fullscreenElement || document.webkitFullscreenElement;
+  }
+
+  function updateFullscreen() {
+    const expanded = fullscreenElement() === player || inPageExpanded;
+    player?.classList.toggle('is-fullscreen', expanded);
+    if (!fullscreenControl) return;
+    fullscreenControl.setAttribute('aria-label', expanded ? 'Exit full film fullscreen' : 'View full film in fullscreen');
+    const label = fullscreenControl.querySelector('span');
+    if (label) label.textContent = expanded ? 'Exit full film' : 'View full film';
+    if (expanded) {
+      visible = true;
+      synchronize();
+    }
+  }
+
+  function enterNativeFullscreen() {
+    const deck = pending?.deck || active;
+    const video = deck.video;
+    if (deck.index !== selected || video.readyState < 1 || !video.webkitEnterFullscreen) return false;
+    try {
+      video.webkitEnterFullscreen();
+      return true;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  function replaySelectedScene() {
+    // Cancel the old decoder request before resetting a deck, so its late play
+    // promise or frame callback cannot reveal a previously selected scene.
+    cancelRequest();
+    clearTimeout(fadeTimer);
+    decks.forEach(deck => deck.video.pause());
+    manualPause = false;
+    preferenceOverride = staticPreference();
+    autoplayBlocked = false;
+    sceneFailed = false;
+    failures.delete(selected);
+    visible = true;
+    const deck = active.index === selected ? active : decks.find(item => item !== active);
+    configure(deck, selected, 'auto');
+    // Setting zero also sets the initial playback position before metadata is
+    // available; do not wait for loading and lose the fullscreen user gesture.
+    deck.video.currentTime = 0;
+    buttons[selected].style.setProperty('--scene-progress', '0%');
+    hero.classList.add('is-poster-only');
+    startScene();
+  }
+
+  function expandInPage() {
+    if (!player || inPageExpanded) return;
+    inPageExpanded = true;
+    expandedFocus = document.activeElement;
+    priorOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    // Isolate only sibling branches; the player's own ancestors stay interactive.
+    for (let branch = player; branch && branch !== document.body; branch = branch.parentElement) {
+      [...(branch.parentElement?.children || [])].forEach(sibling => {
+        if (sibling === branch) return;
+        inertBranches.push([sibling, sibling.inert]);
+        sibling.inert = true;
+      });
+    }
+    player.setAttribute('role', 'dialog');
+    player.setAttribute('aria-modal', 'true');
+    player.classList.add('is-expanded');
+    hero.classList.add('is-film-expanded');
+    updateFullscreen();
+    fullscreenControl?.focus();
+  }
+
+  function closeInPage() {
+    if (!inPageExpanded) return;
+    inPageExpanded = false;
+    document.body.style.overflow = priorOverflow;
+    inertBranches.forEach(([element, wasInert]) => { element.inert = wasInert; });
+    inertBranches = [];
+    player.setAttribute('role', 'region');
+    player.removeAttribute('aria-modal');
+    player.classList.remove('is-expanded');
+    hero.classList.remove('is-film-expanded');
+    updateFullscreen();
+    if (expandedFocus?.isConnected) expandedFocus.focus();
+  }
+
+  if (fullscreenControl) {
+    fullscreenControl.hidden = false;
+    fullscreenControl.addEventListener('click', async () => {
+      try {
+        if (inPageExpanded) {
+          closeInPage();
+        } else if (fullscreenElement() === player) {
+          const exit = document.exitFullscreen || document.webkitExitFullscreen;
+          if (exit) await exit.call(document);
+        } else {
+          replaySelectedScene();
+          // play() is requested synchronously above, never awaited before the
+          // browser fullscreen request, which must retain this click's gesture.
+          if (canFullscreenPlayer()) {
+            const enter = player.requestFullscreen || player.webkitRequestFullscreen;
+            await enter.call(player);
+          } else if (!enterNativeFullscreen()) {
+            expandInPage();
+          }
+        }
+      } catch (_) {
+        if (!enterNativeFullscreen()) expandInPage();
+      }
+    });
+    document.addEventListener('fullscreenchange', updateFullscreen);
+    document.addEventListener('webkitfullscreenchange', updateFullscreen);
+    document.addEventListener('keydown', event => {
+      if (!inPageExpanded) return;
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        closeInPage();
+      } else if (event.key === 'Tab') {
+        const focusable = [...player.querySelectorAll('button:not([disabled]):not([hidden]), a[href]')].filter(element => element.getClientRects().length);
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (event.shiftKey && document.activeElement === first) {
+          event.preventDefault();
+          last?.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+          event.preventDefault();
+          first?.focus();
+        }
+      }
+    });
+  }
+
   decks.forEach(deck => {
+    deck.video.addEventListener('loadedmetadata', updateControl);
+    deck.video.addEventListener('webkitbeginfullscreen', () => { nativeFullscreenDeck = deck; });
+    deck.video.addEventListener('webkitendfullscreen', () => {
+      if (nativeFullscreenDeck === deck) nativeFullscreenDeck = null;
+      if (deck.index === selected && (deck === active || pending?.deck === deck) && !deck.video.ended) {
+        // iPhone native controls can pause independently of our inline button.
+        // Preserve that actual state on exit instead of resuming a paused film.
+        manualPause = deck.video.paused;
+        if (manualPause) synchronize();
+        else updateControl();
+        return;
+      }
+      if (deck === active && deck.video.ended && canPlay()) {
+        const next = nextIndex();
+        if (next >= 0) selectScene(next, false, next === selected);
+      }
+    });
     deck.video.addEventListener('ended', () => {
-      if (deck !== active || deck.index !== selected || pending || !canPlay()) return;
+      if (deck !== active || deck.index !== selected || pending || !canPlay() || nativeFullscreenDeck === deck) return;
       const next = nextIndex();
       if (next >= 0) selectScene(next, false, next === selected);
     });

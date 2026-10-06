@@ -1,0 +1,144 @@
+{
+  "revision": "V2 facility films, October 2026",
+  "status": "Completed V2 renders present locally; final media properties verified; live-site deployment and playback validation pending",
+  "source": "Higgsfield generations and the original media-provenance.json clip history",
+  "generation_models": {
+    "start_frames": "GPT Image 2",
+    "image_to_video": "Cinema Studio 4.0"
+  },
+  "composition": {
+    "editor": "Higgsedit native composition",
+    "typography": "Exact facility titles and role labels are composed as text layers rather than relying on generated lettering",
+    "logo": "Original supplied PRISM artwork",
+    "logo_source": "dist/assets/prism-logo-small.png"
+  },
+  "output_properties": {
+    "width": 1920,
+    "height": 1080,
+    "fps": 24,
+    "video_codec": "H.264",
+    "pixel_format": "yuv420p",
+    "audio": false,
+    "streaming_optimized": true,
+    "faststart": true,
+    "poster_format": "WebP",
+    "verification": "Final V2 file properties, durations and file sizes probe-verified; matching WebP posters present"
+  },
+  "validation": {
+    "native_composition_checks": "clean",
+    "visual_review": "Intro, cue and outro frames reviewed",
+    "live_site_deployment_and_playback": "pending"
+  },
+  "clips": [
+    {
+      "file": "dist/assets/prism-emergency-v2.mp4",
+      "poster": "dist/assets/prism-emergency-v2.webp",
+      "duration_seconds": 14,
+      "file_size_bytes": 4662511,
+      "facility_title": "Community Emergency Center",
+      "new_start_frame_id": "46112668-2a6b-4b27-a6a0-6de162ddf99b",
+      "new_video_id": "61f7fc8b-c7fb-4834-8c39-8be041b27d76",
+      "content": "Two-floor emergency-facility exterior, medical-plus signage and medical helicopter, followed by the original emergency-care footage",
+      "appended_original": {
+        "file": "dist/assets/prism-emergency.mp4",
+        "source_id": "a2452950-4bee-4b4a-8ac6-04988b8941c4",
+        "source_file": "prism-media-source/emergency.mp4",
+        "edit_reference": "media-provenance.json: prism-emergency.mp4"
+      },
+      "ui_points": [
+        "Arrival & registration",
+        "Emergency care team",
+        "Treatment & diagnostics",
+        "Air medical transport"
+      ]
+    },
+    {
+      "file": "dist/assets/prism-anesthesia-v2.mp4",
+      "poster": "dist/assets/prism-anesthesia-v2.webp",
+      "duration_seconds": 13,
+      "file_size_bytes": 3763678,
+      "facility_title": "Ambulatory Surgery Center",
+      "new_start_frame_id": "019da1a0-8702-4045-90f4-05cf8e6bbd6d",
+      "new_video_id": "81a9aced-66db-4ef7-af79-7568d1fe6073",
+      "content": "Non-graphic shoulder-procedure setting identifying the surgeon and anesthesiologist, followed by original anesthesia-monitoring footage and an outro",
+      "role_labels": ["Orthopedic Surgeon", "Anesthesiologist"],
+      "edit": {
+        "new_source_start_seconds": 0,
+        "new_source_end_seconds": 5.5,
+        "new_source_playback_speed": 0.6875,
+        "new_source_output_duration_seconds": 8,
+        "original_monitoring_duration_seconds": 3,
+        "outro_duration_seconds": 2,
+        "rationale": "The selected and retimed source keeps the anesthesiologist visible",
+        "role_leader_lines": "Fixed leader lines point to the correct sleeves throughout the label duration"
+      },
+      "appended_original": {
+        "file": "dist/assets/prism-anesthesia.mp4",
+        "source_id": "38d3b2ff-97a0-4bb1-b2fe-2ecaa303e757",
+        "source_file": "prism-media-source/anesthesia.mp4",
+        "edit_reference": "media-provenance.json: prism-anesthesia.mp4"
+      },
+      "ui_points": [
+        "Shoulder procedure",
+        "Orthopedic Surgeon",
+        "Anesthesiologist",
+        "Anesthesia monitoring"
+      ]
+    },
+    {
+      "file": "dist/assets/prism-radiology-v2.mp4",
+      "poster": "dist/assets/prism-radiology-v2.webp",
+      "duration_seconds": 15.75,
+      "file_size_bytes": 3032938,
+      "facility_title": "ACME RADIOLOGY",
+      "new_start_frame_id": "1b02d518-ce74-48d1-bc17-9603d4372ef9",
+      "new_video_id": "115d05ac-992e-4bdf-a19b-f1edff6e2f18",
+      "content": "Radiology-facility introduction followed by the original MRI, CT and X-ray sequence",
+      "appended_original": {
+        "file": "dist/assets/prism-radiology.mp4",
+        "edit_reference": "media-provenance.json: prism-radiology.mp4",
+        "sources": [
+          {
+            "modality": "MRI",
+            "source_id": "e6a1e89c-32da-404b-b4f7-9337ece6b764",
+            "source_file": "prism-media-source/mri-refined.mp4"
+          },
+          {
+            "modality": "CT",
+            "source_id": "5e2e03a6-648e-4fbe-b8e3-cb13d01c6b12",
+            "source_file": "prism-media-source/radiology-original.mp4"
+          },
+          {
+            "modality": "X-ray",
+            "source_id": "fb601010-6ec7-44f5-9577-95b67c3af5cd",
+            "source_file": "prism-media-source/xray-refined.mp4"
+          }
+        ]
+      },
+      "ui_points": ["Patient check-in", "MRI imaging", "CT imaging", "X-ray imaging"]
+    },
+    {
+      "file": "dist/assets/prism-claims-office.mp4",
+      "poster": "dist/assets/prism-claims-office.webp",
+      "duration_seconds": 8,
+      "facility_title": "The PRISM back office",
+      "status": "Existing branded office film retained",
+      "source_id": "047b0aa4-8b5b-4f99-9a6f-db695f074483",
+      "source_file": "prism-media-source/office.mp4",
+      "edit_reference": "media-provenance.json: prism-claims-office.mp4",
+      "content": "Claims specialists reviewing papers and abstract case-management screens with the original PRISM logo on the background wall sign",
+      "ui_points": ["Claim review", "Supporting documents", "Case coordination", "IDR workflow"]
+    }
+  ],
+  "reference_only": [
+    {
+      "file": "ACH-ER-Tour.mp4",
+      "use": "Visual reference only; no footage incorporated into the V2 films"
+    }
+  ],
+  "notes": [
+    "Facility names and clinical settings are illustrative; these are not documentary recordings of PRISM employees or facilities.",
+    "The original media-provenance.json remains the source of the retained clips' edit ranges and earlier processing details.",
+    "Final V2 media properties and render sizes are verified locally; live-site deployment and playback validation remain pending."
+  ]
+}
