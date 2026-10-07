@@ -1,0 +1,493 @@
+{
+  "revision": "V3 — unbranded facility films and enterprise website imagery",
+  "recorded_date_local": "2026-10-07",
+  "timezone": "Asia/Calcutta",
+  "status": "Media ready; static, local playback and mobile QA passed; live deployment verification pending.",
+  "production_provider": "Higgsfield",
+  "generation_models": {
+    "images": "GPT Image 2 (gpt_image_2)",
+    "video": "Cinema Studio 4.0 (cinematic_studio_video_4_0)"
+  },
+  "branding": {
+    "films": "No PRISM lettering or logo. Fictional healthcare facility identities use their own emblems. Claims operations footage has no company branding.",
+    "website": "Original PRISM branding retained in the website interface.",
+    "illustrative": true
+  },
+  "source_records_from_workspace": [
+    "output/prism-v3/image-results.json",
+    "output/prism-v3/image-requests-1.json",
+    "output/prism-v3/video-results-complete.json",
+    "output/prism-v3/video-requests.json"
+  ],
+  "image_generations": [
+    {
+      "generation_id": "3b744522-92a3-4d98-a0ee-7f62b5a0ca3a",
+      "index": 1,
+      "model": "gpt_image_2",
+      "status": "completed",
+      "subject": "er-exterior",
+      "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3KHmPtlWrVtaH5GX6vvXfnVKdM8/hf_20261006_144312_3b744522-92a3-4d98-a0ee-7f62b5a0ca3a.png",
+      "source_path_from_workspace": "output/prism-v3/source/er-exterior.png"
+    },
+    {
+      "generation_id": "89486b09-e0ae-40b4-b991-f1d6dce54e2a",
+      "index": 2,
+      "model": "gpt_image_2",
+      "status": "completed",
+      "subject": "anesthesia",
+      "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3KHmPtlWrVtaH5GX6vvXfnVKdM8/hf_20261006_144311_89486b09-e0ae-40b4-b991-f1d6dce54e2a.png",
+      "source_path_from_workspace": "output/prism-v3/source/anesthesia.png"
+    },
+    {
+      "generation_id": "66c8d8c2-da27-4a56-b72d-0e372ab8cf47",
+      "index": 3,
+      "model": "gpt_image_2",
+      "status": "completed",
+      "subject": "radiology",
+      "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3KHmPtlWrVtaH5GX6vvXfnVKdM8/hf_20261006_144312_66c8d8c2-da27-4a56-b72d-0e372ab8cf47.png",
+      "source_path_from_workspace": "output/prism-v3/source/radiology.png"
+    },
+    {
+      "generation_id": "0244d52e-efbf-48d9-8a1f-ae7d8a2f26b7",
+      "index": 4,
+      "model": "gpt_image_2",
+      "status": "completed",
+      "subject": "operations",
+      "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3KHmPtlWrVtaH5GX6vvXfnVKdM8/hf_20261006_144312_0244d52e-efbf-48d9-8a1f-ae7d8a2f26b7.png",
+      "source_path_from_workspace": "output/prism-v3/source/operations.png"
+    },
+    {
+      "generation_id": "a439c139-af35-4897-b956-84cb16b608de",
+      "index": 5,
+      "model": "gpt_image_2",
+      "status": "completed",
+      "subject": "care-team",
+      "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3KHmPtlWrVtaH5GX6vvXfnVKdM8/hf_20261006_144311_a439c139-af35-4897-b956-84cb16b608de.png",
+      "source_path_from_workspace": "output/prism-v3/source/care-team.png"
+    },
+    {
+      "generation_id": "9c05fd98-e8f3-4b77-a53f-2b0a041ccc42",
+      "index": 6,
+      "model": "gpt_image_2",
+      "status": "completed",
+      "subject": "platform",
+      "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3KHmPtlWrVtaH5GX6vvXfnVKdM8/hf_20261006_144312_9c05fd98-e8f3-4b77-a53f-2b0a041ccc42.png",
+      "source_path_from_workspace": "output/prism-v3/source/platform.png"
+    },
+    {
+      "generation_id": "ffc19e4c-f42c-4bb2-948b-45196e7e0677",
+      "index": 7,
+      "model": "gpt_image_2",
+      "status": "completed",
+      "subject": "partnership",
+      "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3KHmPtlWrVtaH5GX6vvXfnVKdM8/hf_20261006_144335_ffc19e4c-f42c-4bb2-948b-45196e7e0677.png",
+      "source_path_from_workspace": "output/prism-v3/source/partnership.png"
+    },
+    {
+      "generation_id": "61a85c65-0586-4a8f-96e4-933961657f8f",
+      "index": 8,
+      "model": "gpt_image_2",
+      "status": "completed",
+      "subject": "er-interior",
+      "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3KHmPtlWrVtaH5GX6vvXfnVKdM8/hf_20261006_144335_61a85c65-0586-4a8f-96e4-933961657f8f.png",
+      "source_path_from_workspace": "output/prism-v3/source/er-interior.png"
+    }
+  ],
+  "video_generations": [
+    {
+      "generation_id": "8e217fd1-959f-4291-b4dc-6780dd4be0f7",
+      "index": 1,
+      "model": "cinematic_studio_video_4_0",
+      "status": "completed",
+      "subject": "er-exterior",
+      "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3KHmPtlWrVtaH5GX6vvXfnVKdM8/hf_20261006_145008_8e217fd1-959f-4291-b4dc-6780dd4be0f7.mp4",
+      "source_path_from_workspace": "output/prism-v3/source/er-exterior.mp4",
+      "start_image_generation_id": "3b744522-92a3-4d98-a0ee-7f62b5a0ca3a",
+      "request_settings": {
+        "mode": "omni_reference",
+        "duration": 6,
+        "resolution": "1080p",
+        "aspect_ratio": "16:9",
+        "generate_audio": false,
+        "bitrate_mode": "high"
+      },
+      "properties": {
+        "file_size_bytes": 29471294,
+        "width": 1920,
+        "height": 1080,
+        "codec": "hevc",
+        "pixel_format": "yuv420p10le",
+        "duration_seconds": 6.041667,
+        "frame_rate": "24/1",
+        "audio_stream_count": 0,
+        "faststart": false,
+        "sha256": "7baa7999156ea5f3774c5c83e0bcedfe56cef7b71ebead61950689634806f7f5"
+      }
+    },
+    {
+      "generation_id": "74d99d6a-d640-4d14-a0b9-f77e451ca0d6",
+      "index": 2,
+      "model": "cinematic_studio_video_4_0",
+      "status": "completed",
+      "subject": "er-interior",
+      "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3KHmPtlWrVtaH5GX6vvXfnVKdM8/hf_20261006_145008_74d99d6a-d640-4d14-a0b9-f77e451ca0d6.mp4",
+      "source_path_from_workspace": "output/prism-v3/source/er-interior.mp4",
+      "start_image_generation_id": "61a85c65-0586-4a8f-96e4-933961657f8f",
+      "request_settings": {
+        "mode": "omni_reference",
+        "duration": 6,
+        "resolution": "1080p",
+        "aspect_ratio": "16:9",
+        "generate_audio": false,
+        "bitrate_mode": "high"
+      },
+      "properties": {
+        "file_size_bytes": 16138206,
+        "width": 1920,
+        "height": 1080,
+        "codec": "hevc",
+        "pixel_format": "yuv420p10le",
+        "duration_seconds": 6.041667,
+        "frame_rate": "24/1",
+        "audio_stream_count": 0,
+        "faststart": false,
+        "sha256": "e560863057d33f548535e5b4f04052c2769d68fa54ea547ac7ca6bcd8026aaf2"
+      }
+    },
+    {
+      "generation_id": "5a0120fb-e62f-4c9d-bbf7-0feb829322aa",
+      "index": 3,
+      "model": "cinematic_studio_video_4_0",
+      "status": "completed",
+      "subject": "anesthesia",
+      "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3KHmPtlWrVtaH5GX6vvXfnVKdM8/hf_20261006_145010_5a0120fb-e62f-4c9d-bbf7-0feb829322aa.mp4",
+      "source_path_from_workspace": "output/prism-v3/source/anesthesia.mp4",
+      "start_image_generation_id": "89486b09-e0ae-40b4-b991-f1d6dce54e2a",
+      "request_settings": {
+        "mode": "omni_reference",
+        "duration": 8,
+        "resolution": "1080p",
+        "aspect_ratio": "16:9",
+        "generate_audio": false,
+        "bitrate_mode": "high"
+      },
+      "properties": {
+        "file_size_bytes": 28088717,
+        "width": 1920,
+        "height": 1080,
+        "codec": "hevc",
+        "pixel_format": "yuv420p10le",
+        "duration_seconds": 8.041667,
+        "frame_rate": "24/1",
+        "audio_stream_count": 0,
+        "faststart": false,
+        "sha256": "f26678dcf20ad8d81851b072edfef122208f1db24c812717bd35a4ffef5eafe8"
+      }
+    },
+    {
+      "generation_id": "ae088df3-3aed-4c12-a1ac-56a5133758c7",
+      "index": 4,
+      "model": "cinematic_studio_video_4_0",
+      "status": "completed",
+      "subject": "radiology",
+      "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3KHmPtlWrVtaH5GX6vvXfnVKdM8/hf_20261006_145008_ae088df3-3aed-4c12-a1ac-56a5133758c7.mp4",
+      "source_path_from_workspace": "output/prism-v3/source/radiology.mp4",
+      "start_image_generation_id": "66c8d8c2-da27-4a56-b72d-0e372ab8cf47",
+      "request_settings": {
+        "mode": "omni_reference",
+        "duration": 12,
+        "resolution": "1080p",
+        "aspect_ratio": "16:9",
+        "generate_audio": false,
+        "bitrate_mode": "high"
+      },
+      "properties": {
+        "file_size_bytes": 20959817,
+        "width": 1920,
+        "height": 1080,
+        "codec": "hevc",
+        "pixel_format": "yuv420p10le",
+        "duration_seconds": 12.041667,
+        "frame_rate": "24/1",
+        "audio_stream_count": 0,
+        "faststart": false,
+        "sha256": "bf01a7964b66c100a2f9dd5766da6901368e6acea90361f2f995f03b60013f9c"
+      }
+    },
+    {
+      "generation_id": "75ef62ff-9319-435a-8b7d-d7582bde900e",
+      "index": 5,
+      "model": "cinematic_studio_video_4_0",
+      "status": "completed",
+      "subject": "operations",
+      "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3KHmPtlWrVtaH5GX6vvXfnVKdM8/hf_20261006_145008_75ef62ff-9319-435a-8b7d-d7582bde900e.mp4",
+      "source_path_from_workspace": "output/prism-v3/source/operations.mp4",
+      "start_image_generation_id": "0244d52e-efbf-48d9-8a1f-ae7d8a2f26b7",
+      "request_settings": {
+        "mode": "omni_reference",
+        "duration": 10,
+        "resolution": "1080p",
+        "aspect_ratio": "16:9",
+        "generate_audio": false,
+        "bitrate_mode": "high"
+      },
+      "properties": {
+        "file_size_bytes": 46609922,
+        "width": 1920,
+        "height": 1080,
+        "codec": "hevc",
+        "pixel_format": "yuv420p10le",
+        "duration_seconds": 10.041667,
+        "frame_rate": "24/1",
+        "audio_stream_count": 0,
+        "faststart": false,
+        "sha256": "863878b5ac89fa3c5bad4219bdc1423361a3f7f02919f6d7ff6549217b9c4431"
+      }
+    }
+  ],
+  "clips": [
+    {
+      "file": "dist/assets/prism-emergency-v3.mp4",
+      "facility_title": "Community Emergency Center",
+      "source_video_generation_ids": [
+        "8e217fd1-959f-4291-b4dc-6780dd4be0f7",
+        "74d99d6a-d640-4d14-a0b9-f77e451ca0d6"
+      ],
+      "edit": "Two new generated sequences: exterior drone movement and registration/care setting, encoded separately then concatenated in that order.",
+      "uses_previous_revision_footage": false,
+      "properties": {
+        "file_size_bytes": 5225664,
+        "width": 1920,
+        "height": 1080,
+        "codec": "h264",
+        "pixel_format": "yuv420p",
+        "duration_seconds": 12.083333,
+        "frame_rate": "24/1",
+        "audio_stream_count": 0,
+        "faststart": true,
+        "sha256": "e35fae957cff727cff03bb2e916f3089df217d5fb1a5cce38284059c917cf740"
+      },
+      "poster": {
+        "file": "dist/assets/prism-emergency-v3.webp",
+        "source_image_generation_id": "3b744522-92a3-4d98-a0ee-7f62b5a0ca3a",
+        "conversion": "Scale to fill 1920×1080, crop to 1920×1080, libwebp quality 84.",
+        "properties": {
+          "file_size_bytes": 290690,
+          "width": 1920,
+          "height": 1080,
+          "codec": "webp",
+          "pixel_format": "yuv420p",
+          "sha256": "a9d25cb8c738d8a1091802146feee98635f808d679fa513715c6b859825a9bd6"
+        }
+      }
+    },
+    {
+      "file": "dist/assets/prism-anesthesia-v3.mp4",
+      "facility_title": "Ambulatory Surgery Center",
+      "source_video_generation_ids": [
+        "5a0120fb-e62f-4c9d-bbf7-0feb829322aa"
+      ],
+      "edit": "New wide shoulder-procedure team scene with restrained lateral camera movement.",
+      "uses_previous_revision_footage": false,
+      "properties": {
+        "file_size_bytes": 2594104,
+        "width": 1920,
+        "height": 1080,
+        "codec": "h264",
+        "pixel_format": "yuv420p",
+        "duration_seconds": 8.041667,
+        "frame_rate": "24/1",
+        "audio_stream_count": 0,
+        "faststart": true,
+        "sha256": "dacfcc1978e3ba1440ed53854434b582324508d36f8a53a6b2b34fdc67744a5c"
+      },
+      "poster": {
+        "file": "dist/assets/prism-anesthesia-v3.webp",
+        "source_image_generation_id": "89486b09-e0ae-40b4-b991-f1d6dce54e2a",
+        "conversion": "Scale to fill 1920×1080, crop to 1920×1080, libwebp quality 84.",
+        "properties": {
+          "file_size_bytes": 210808,
+          "width": 1920,
+          "height": 1080,
+          "codec": "webp",
+          "pixel_format": "yuv420p",
+          "sha256": "b773fea8c0dd64a2c1f48039f7dfd715f9bb01c9c0cfdd125e33230ed2ca3126"
+        }
+      }
+    },
+    {
+      "file": "dist/assets/prism-radiology-v3.mp4",
+      "facility_title": "ACME RADIOLOGY",
+      "source_video_generation_ids": [
+        "ae088df3-3aed-4c12-a1ac-56a5133758c7"
+      ],
+      "edit": "New reception and MRI, CT and X-ray sequence.",
+      "uses_previous_revision_footage": false,
+      "properties": {
+        "file_size_bytes": 2543358,
+        "width": 1920,
+        "height": 1080,
+        "codec": "h264",
+        "pixel_format": "yuv420p",
+        "duration_seconds": 12.041667,
+        "frame_rate": "24/1",
+        "audio_stream_count": 0,
+        "faststart": true,
+        "sha256": "0fb4af46e536f68f3f4c9269141a8c915203d5ab0467362a810975464b5b47c5"
+      },
+      "poster": {
+        "file": "dist/assets/prism-radiology-v3.webp",
+        "source_image_generation_id": "66c8d8c2-da27-4a56-b72d-0e372ab8cf47",
+        "conversion": "Scale to fill 1920×1080, crop to 1920×1080, libwebp quality 84.",
+        "properties": {
+          "file_size_bytes": 165352,
+          "width": 1920,
+          "height": 1080,
+          "codec": "webp",
+          "pixel_format": "yuv420p",
+          "sha256": "cb2ec1b526d1b97dc58692f9bb6e371bfdb99eb56b7af9b9a00a40f4a1d52a3d"
+        }
+      }
+    },
+    {
+      "file": "dist/assets/prism-claims-office-v3.mp4",
+      "facility_title": "Claims operations",
+      "source_video_generation_ids": [
+        "75ef62ff-9319-435a-8b7d-d7582bde900e"
+      ],
+      "edit": "New elevated camera move through a large, multi-area enterprise office with many employees.",
+      "uses_previous_revision_footage": false,
+      "properties": {
+        "file_size_bytes": 4519269,
+        "width": 1920,
+        "height": 1080,
+        "codec": "h264",
+        "pixel_format": "yuv420p",
+        "duration_seconds": 10.041667,
+        "frame_rate": "24/1",
+        "audio_stream_count": 0,
+        "faststart": true,
+        "sha256": "955d2a962e9597626574fe3cec0b88813d348966447a8417f1615fb65a32e3ca"
+      },
+      "poster": {
+        "file": "dist/assets/prism-claims-office-v3.webp",
+        "source_image_generation_id": "0244d52e-efbf-48d9-8a1f-ae7d8a2f26b7",
+        "conversion": "Scale to fill 1920×1080, crop to 1920×1080, libwebp quality 84.",
+        "properties": {
+          "file_size_bytes": 324654,
+          "width": 1920,
+          "height": 1080,
+          "codec": "webp",
+          "pixel_format": "yuv420p",
+          "sha256": "2c937d7e4e4160b31e891730293b546dc06a62692f5af2fd24cf4c400c926073"
+        }
+      }
+    }
+  ],
+  "editorial_images": [
+    {
+      "file": "dist/assets/prism-care-team-v3.webp",
+      "source_image_generation_id": "a439c139-af35-4897-b956-84cb16b608de",
+      "conversion": "Scale to width 1600, preserve aspect ratio with even height, libwebp quality 84.",
+      "properties": {
+        "file_size_bytes": 114114,
+        "width": 1600,
+        "height": 1062,
+        "codec": "webp",
+        "pixel_format": "yuv420p",
+        "sha256": "57d62c5ac5833790a13847bd150ecd845cac6982e71fbbeaf70b8f168db84d18"
+      },
+      "placements": [
+        "Homepage expertise card",
+        "Services clinical image",
+        "About main photograph"
+      ]
+    },
+    {
+      "file": "dist/assets/prism-partnership-v3.webp",
+      "source_image_generation_id": "ffc19e4c-f42c-4bb2-948b-45196e7e0677",
+      "conversion": "Scale to width 1600, preserve aspect ratio with even height, libwebp quality 84.",
+      "properties": {
+        "file_size_bytes": 127362,
+        "width": 1600,
+        "height": 1062,
+        "codec": "webp",
+        "pixel_format": "yuv420p",
+        "sha256": "d9e46bc57c6d47b244a90ddb7407ead643b4752534cd1115ce48cf8890a96fdc"
+      },
+      "placements": [
+        "Homepage partnership card",
+        "Contact consultation photograph"
+      ]
+    },
+    {
+      "file": "dist/assets/prism-platform-v3.webp",
+      "source_image_generation_id": "9c05fd98-e8f3-4b77-a53f-2b0a041ccc42",
+      "conversion": "Scale to width 1600, preserve aspect ratio with even height, libwebp quality 84.",
+      "properties": {
+        "file_size_bytes": 125926,
+        "width": 1600,
+        "height": 904,
+        "codec": "webp",
+        "pixel_format": "yuv420p",
+        "sha256": "9a27fe362bec86f27c112108763055155f88dc4e0c19d0eea3abd0b8ed1e27b1"
+      },
+      "placements": [
+        "Platform editorial feature"
+      ]
+    },
+    {
+      "file": "dist/assets/prism-operations-v3.webp",
+      "source_image_generation_id": "0244d52e-efbf-48d9-8a1f-ae7d8a2f26b7",
+      "conversion": "Scale to width 1600, preserve aspect ratio with even height, libwebp quality 84.",
+      "properties": {
+        "file_size_bytes": 235120,
+        "width": 1600,
+        "height": 904,
+        "codec": "webp",
+        "pixel_format": "yuv420p",
+        "sha256": "38e9906740a5836ae175e8b7f1fbf68c1d3fa9353e448da9464ec0bf1a6eedc5"
+      },
+      "placements": [
+        "Services operations feature",
+        "About inset photograph"
+      ]
+    }
+  ],
+  "image_placements": {
+    "count": 11,
+    "pages": [
+      "/",
+      "/products/",
+      "/services/",
+      "/about/",
+      "/contact/"
+    ],
+    "editorial_placements": 8,
+    "specialty_gallery_placements": 3,
+    "specialty_gallery_sources": [
+      "dist/assets/prism-emergency-v3.webp",
+      "dist/assets/prism-anesthesia-v3.webp",
+      "dist/assets/prism-radiology-v3.webp"
+    ]
+  },
+  "validation": {
+    "final_media_probe": "Passed: four silent 1920×1080 H.264/yuv420p files at 24 fps; all have moov before mdat for faststart.",
+    "visual_review": "Parent agent reviewed contact sheets for all four final films; no PRISM lettering observed.",
+    "static_checks": "Passed JavaScript syntax, Python/HTML generation and unique IDs/control references.",
+    "local_browser": "Parent agent verified playback of all four clips, manual pause preserved across scene selection, fullscreen contain sizing and exit.",
+    "mobile": "Parent agent verified 390px viewport autoplay, background cover treatment and no horizontal overflow.",
+    "local_byte_range_requests": "206 responses for all four final MP4 files.",
+    "live_deployment_and_playback": "pending",
+    "ios_native_fullscreen": "not device-tested"
+  },
+  "historical_provenance": [
+    "media-provenance.json",
+    "media-provenance-v2.json"
+  ],
+  "notes": [
+    "ER uses two new V3 source generations; no V2 footage is reused in any active film.",
+    "The supplied ACH-ER-Tour.mp4 remains a visual reference and is not used as footage.",
+    "The people and settings are generated illustrations, not documentary representations of PRISM employees or facilities."
+  ]
+}

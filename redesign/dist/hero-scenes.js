@@ -16,7 +16,8 @@
     poster: button.dataset.poster,
     title: button.dataset.title || button.querySelector('strong')?.textContent || '',
     description: button.dataset.description || '',
-    points: (button.dataset.points || '').split('|').filter(Boolean)
+    points: (button.dataset.points || '').split('|').filter(Boolean),
+    position: button.dataset.position || 'center'
   }));
   if (scenes.some(scene => !scene.video || !scene.poster)) return;
 
@@ -25,6 +26,7 @@
   const counter = document.getElementById('scene-counter');
   const points = document.getElementById('scene-points');
   const announcement = document.getElementById('scene-announcement');
+  const sceneContext = hero.querySelector('.scene-context');
   const motionPreference = window.matchMedia('(prefers-reduced-motion: reduce)');
   const connection = navigator.connection;
   const failures = new Set();
@@ -81,6 +83,8 @@
   function renderScene(manual) {
     const scene = scenes[selected];
     background.style.backgroundImage = `url(${JSON.stringify(scene.poster)})`;
+    background.style.setProperty('--scene-position', scene.position);
+    if (manual && sceneContext) sceneContext.open = false;
     if (title) title.textContent = scene.title;
     if (description) description.textContent = scene.description;
     if (points) {
@@ -111,6 +115,7 @@
   function configure(deck, index, preload) {
     const video = deck.video;
     const source = absoluteURL(scenes[index].video);
+    video.style.setProperty('--scene-position', scenes[index].position);
     video.poster = scenes[index].poster;
     video.preload = preload;
     if (deck.source === source && !video.error) {
@@ -340,6 +345,17 @@
     else synchronize();
   });
 
+  document.addEventListener('click', event => {
+    if (sceneContext?.open && !sceneContext.contains(event.target)) sceneContext.open = false;
+  });
+  sceneContext?.addEventListener('keydown', event => {
+    if (event.key === 'Escape' && sceneContext.open) {
+      event.preventDefault();
+      sceneContext.open = false;
+      sceneContext.querySelector('summary')?.focus();
+    }
+  });
+
   function canFullscreenPlayer() {
     return Boolean(player && (player.requestFullscreen || player.webkitRequestFullscreen));
   }
@@ -357,6 +373,10 @@
     if (label) label.textContent = expanded ? 'Exit full film' : 'View full film';
     if (expanded) {
       visible = true;
+      synchronize();
+    } else {
+      const bounds = background.getBoundingClientRect();
+      visible = bounds.bottom > 0 && bounds.top < window.innerHeight;
       synchronize();
     }
   }
@@ -463,7 +483,7 @@
         event.preventDefault();
         closeInPage();
       } else if (event.key === 'Tab') {
-        const focusable = [...player.querySelectorAll('button:not([disabled]):not([hidden]), a[href]')].filter(element => element.getClientRects().length);
+        const focusable = [...player.querySelectorAll('button:not([disabled]):not([hidden]), a[href], summary')].filter(element => element.getClientRects().length);
         const first = focusable[0];
         const last = focusable[focusable.length - 1];
         if (event.shiftKey && document.activeElement === first) {
@@ -536,7 +556,7 @@
   window.addEventListener('pageshow', synchronize);
   if ('IntersectionObserver' in window) {
     new IntersectionObserver(entries => {
-      visible = entries[0].isIntersecting;
+      visible = fullscreenElement() === player || inPageExpanded || entries[0].isIntersecting;
       synchronize();
     }, {threshold: 0.08}).observe(background);
   }

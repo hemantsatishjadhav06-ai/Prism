@@ -18,7 +18,7 @@ navigation?.querySelectorAll('a').forEach(link => link.addEventListener('click',
 document.addEventListener('click', event => {
   if (!event.target.closest('.site-header')) closeMenu();
 });
-const tabLists = document.querySelectorAll('[role="tablist"]');
+const tabLists = document.querySelectorAll('[role="tablist"]:not([data-process-tabs])');
 tabLists.forEach(list => {
   const tabs = [...list.querySelectorAll('[role="tab"]')];
   function activate(tab, focus = false) {

@@ -3,6 +3,9 @@ from html import escape
 import json
 import os
 from hashlib import sha256
+from hero_experience import hero_section
+from process_experience import process_section
+from imagery_experience import enrich_pages
 
 ROOT = Path(__file__).parent
 DIST = ROOT / 'dist'
@@ -35,50 +38,7 @@ def page_hero(label, title, copy, action='', action_label=''):
     btn = f'<a class="btn" href="{action}">{action_label}</a>' if action else ''
     return f'''<section class="page-hero"><div class="container"><div class="breadcrumb"><a href="/">Home</a><span aria-hidden="true">/</span><span>{label}</span></div><div class="intro-grid"><div><div class="eyebrow">{label}</div><h1>{title}</h1></div><div class="lead"><p>{copy}</p>{btn}</div></div></div></section>'''
 
-WORKFLOW = [
-    ('Intake & Eligibility Screening', 'Start with a supported case.', 'Bring claim information together, review eligibility and validate the qualifying payment amount against relevant benchmarks.', 'Claims Ingest|Eligibility Engine|QPA Validator', [1,2,3], 'Eligibility review and payment analysis'),
-    ('Open Negotiation', 'Prepare the next conversation.', 'Connect negotiation documentation with the case timeline, so the next action is clear to your team.', 'Negotiation Workflow', [4], 'Negotiation documents and a case timeline'),
-    ('Federal IDR Filing & Arbitration', 'Bring the evidence together.', 'Prepare the filing, supporting documents and offer strategy for the selected independent dispute resolution entity.', 'IDRE Submission|Deadline Sentinel', [5,7], 'A filing and supporting evidence packet'),
-    ('Recovery & Reconciliation', 'Keep recovery in view.', 'Connect recovery reporting and payer performance with the case record, so your team can review outcomes and the next follow-up.', 'Recovery Analytics', [6], 'Recovery reporting and follow-up visibility'),
-    ('Audit-Ready Document Vault', 'Keep the evidence connected.', 'Maintain the documents, timestamps and actions behind each case in a connected record.', 'Audit Trail|Deadline Sentinel', [8,7], 'A traceable history of the case'),
-]
-
-PROCESS_ICONS = [
-    '<rect x="11" y="10" width="26" height="32" rx="3"/><path d="M19 10V7a5 5 0 0 1 10 0v3 M17 27l5 5 10-11"/>',
-    '<path d="M29 28c-3 4-10 5-15 3l-8 3 3-8c-2-2-3-5-3-8 0-7 7-12 15-12s15 5 15 12-7 12-15 12"/><path d="M35 17c5 2 8 6 8 10 0 3-1 5-3 7l2 7-7-3c-5 2-12 1-16-2"/>',
-    '<path d="m27 8 13 13 M22 13l13 13 M24 11l5-5 13 13-5 5 M20 15l5 5-13 13-5-5z M24 34h18v7H24z"/>',
-    '<rect x="4" y="10" width="40" height="28" rx="3"/><circle cx="24" cy="24" r="7"/><path d="M4 19a9 9 0 0 0 9-9 M35 10a9 9 0 0 0 9 9 M4 29a9 9 0 0 1 9 9 M35 38a9 9 0 0 1 9-9"/>',
-    '<rect x="4" y="15" width="40" height="27" rx="3"/><path d="M17 15V9h14v6 M4 25h40 M21 25v5h6v-5"/>',
-]
-
-def workflow():
-    tabs = ''.join(f'<button class="lifecycle-step" role="tab" id="tab-{i}" aria-controls="panel-{i}" aria-selected="{str(i == 0).lower()}" tabindex="{0 if i == 0 else -1}"><span class="lifecycle-icon"><svg width="48" height="48" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">{PROCESS_ICONS[i]}</svg><span class="lifecycle-number" aria-hidden="true">{i+1}</span></span><strong class="lifecycle-title">{escape(WORKFLOW[i][0])}</strong></button>' for i in range(len(WORKFLOW)))
-    panels = ''
-    for i,(name,title,copy,modules,anchors,outcome) in enumerate(WORKFLOW):
-        chips = ''.join(f'<a href="/products/#module-{anchor}">{label}</a>' for label,anchor in zip(modules.split('|'),anchors))
-        panels += f'<div class="process-panel" role="tabpanel" id="panel-{i}" aria-labelledby="tab-{i}" tabindex="0"' + (' hidden' if i else '') + f'><div class="lifecycle-detail-heading"><span class="process-kicker">STEP 0{i+1}</span><h3>{title}</h3></div><div class="lifecycle-detail-copy"><p>{copy}</p><div class="process-modules">{chips}</div><div class="process-output"><span>The output</span><p>{outcome}</p></div><a class="text-link" href="/contact/?interest=Platform%20demo">Walk through the platform</a></div></div>'
-    return f'''<div class="lifecycle-explorer"><div class="lifecycle-tabs" role="tablist" aria-label="Explore the five steps in PRISM’s IDR lifecycle">{tabs}</div><p class="lifecycle-help">Select a step to read more below.</p><div class="lifecycle-details">{panels}</div><p class="lifecycle-note">Documents, deadlines and case history stay connected throughout the lifecycle.</p></div>'''
-
-def process_section():
-    return '<section class="section process-section" id="process"><div class="container"><div class="section-head"><div class="eyebrow">The PRISM process</div><div><h2>Connected work.<br>Clear next steps.</h2><p>Software connected with PRISM specialists, from the first claim review to recovery reporting.</p></div></div>' + workflow() + '</div></section>'
-
-HERO_SCENES = [
-    ('prism-emergency-v2', 'Emergency facilities', 'Community Emergency Center', 'From arrival and registration to the emergency care team.', 'Arrival & registration|Emergency care team|Treatment & diagnostics|Air medical transport', 'Arrival to treatment'),
-    ('prism-anesthesia-v2', 'Anesthesia', 'Ambulatory Surgery Center', 'Two distinct roles. One coordinated surgical setting.', 'Shoulder procedure|Orthopedic Surgeon|Anesthesiologist|Anesthesia monitoring', 'Inside the surgery center'),
-    ('prism-radiology-v2', 'Radiology', 'ACME RADIOLOGY', 'A closer look at the people and technology behind imaging.', 'Patient check-in|MRI imaging|CT imaging|X-ray imaging', 'MRI · CT · X-ray'),
-    ('prism-claims-office', 'PRISM back office', 'The PRISM back office', 'Connecting the documentation and work behind each claim.', 'Claim review|Supporting documents|Case coordination|IDR workflow', 'The work behind each claim'),
-]
-
-def hero_scene_buttons():
-    return ''.join(f'<button type="button" class="scene-button" aria-pressed="{str(i == 0).lower()}" aria-controls="hero-player" data-video="/assets/{asset}.mp4" data-poster="/assets/{asset}.webp" data-title="{escape(title, quote=True)}" data-description="{escape(description, quote=True)}" data-points="{escape(points, quote=True)}"><span class="scene-number">0{i+1}</span><span class="scene-button-copy"><strong>{escape(label)}</strong><small>{escape(subtitle)}</small></span><span class="scene-indicator" aria-hidden="true"></span></button>' for i, (asset, label, title, description, points, subtitle) in enumerate(HERO_SCENES))
-
-HOME = '''<section class="hero hero-video-hero hero-specialties" aria-label="Care settings supported by PRISM">
-<div class="container hero-main"><div class="hero-copy"><div class="eyebrow">Payment Resolution &amp; IDR System Management</div><h1 aria-label="No Surprise Billing. Fully Managed IDR Lifecycle."><span class="headline-rotator" id="hero-headlines" aria-hidden="true"><span class="headline-slide is-active">No Surprise<br>Billing</span><span class="headline-slide">Fully Managed<br>IDR Lifecycle</span></span></h1><noscript><style>.headline-rotator{min-height:0;overflow:visible}.headline-slide{position:static;opacity:1;transform:none}.headline-slide+ .headline-slide{font-size:.55em;margin-top:.3em}</style></noscript><p class="hero-description">Out-of-network payment resolution.<br>One connected platform. Expert IDR support.<br>More focus on the care you provide.</p><div class="btn-group"><a class="btn btn-white" href="/contact/">Request a consultation</a><a class="btn" href="/products/">Explore the platform</a></div><p class="hero-proof">Technology and white-glove expertise, together.</p><div class="hero-copy-foot"><p>Behind every encounter, a claim.<br><span>Behind every claim, PRISM.</span></p><button class="headline-control" type="button" aria-controls="hero-headlines" aria-label="Pause scrolling text" hidden><span class="headline-control-symbol" aria-hidden="true">Ⅱ</span><span>Pause text</span></button></div></div>
-<div class="hero-player" id="hero-player" role="region" aria-label="Explore PRISM care setting films"><div class="hero-player-heading"><span>Inside the care setting</span><span id="scene-counter">01 / 04</span></div><div class="hero-background"><video id="hero-video" class="hero-scene-video is-active" muted playsinline preload="metadata" poster="/assets/prism-emergency-v2.webp" aria-label="Illustrative emergency facility with an air medical transport helicopter and an emergency care team"><source src="/assets/prism-emergency-v2.mp4" type="video/mp4"></video><video id="hero-video-next" class="hero-scene-video" muted playsinline preload="metadata" aria-hidden="true"></video></div>
-<div class="scene-detail-panel"><div class="scene-detail-heading"><span class="scene-kicker">The setting</span><h2 id="scene-title">Community Emergency Center</h2><p id="scene-description">From arrival and registration to the emergency care team.</p></div><ul class="scene-points" id="scene-points" aria-label="In this setting"><li>Arrival &amp; registration</li><li>Emergency care team</li><li>Treatment &amp; diagnostics</li><li>Air medical transport</li></ul></div>
-<div class="scene-toolbar"><p class="scene-illustration-note">Illustrative facility scenes</p><div class="hero-playback"><button class="video-control" type="button" aria-controls="hero-video hero-video-next" aria-label="Play scene videos"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M5 3L13 8L5 13Z" fill="currentColor"/></svg><span>Play video</span></button><button class="fullscreen-control" type="button" aria-controls="hero-player" aria-label="View full film in fullscreen" hidden><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M6 2H2V6M10 2H14V6M14 10V14H10M6 14H2V10"/></svg><span>View full film</span></button></div></div>
-<div class="scene-navigation" role="group" aria-label="Choose a care setting">''' + hero_scene_buttons() + '''</div><span id="scene-announcement" class="visually-hidden" aria-live="polite"></span></div></div>
-<div class="hero-base"><span>Technology and specialists. Connected to your care.</span><a href="#process">Explore our process</a></div></section>''' + process_section() + '''
+HOME = hero_section() + process_section() + '''
 <section class="section" id="approach"><div class="container"><div class="section-head"><div class="eyebrow">The PRISM approach</div><div><h2>Complex claims.<br>Clearer thinking.</h2><p>Connect the calculations, the documentation and the people behind every dispute.</p></div></div>
 <div class="statement-row"><div class="statement-label"><span>( 01 )</span><span>Precision</span></div><div><h3>Start with a defensible calculation.</h3><p>QPA validation and strategic offer modeling help turn an underpayment into a well-supported case.</p></div></div>
 <div class="statement-row"><div class="statement-label"><span>( 02 )</span><span>Connection</span></div><div><h3>Bring the entire process together.</h3><p>One platform connects eligibility, negotiation, submissions and reporting.</p></div></div>
@@ -144,17 +104,20 @@ CONTACT += '''<section class="section section-white"><div class="container conta
 <p class="form-note">Please do not include patient details, medical information or other protected health information.</p><div class="form-submit"><button class="btn" type="submit">Prepare your inquiry</button><span>Opens your email application with your inquiry ready to send.</span></div>
 <div class="form-status" id="form-status" role="status" hidden>Your inquiry is ready. Complete sending in your email application. <a id="email-fallback" href="mailto:info@prism.inc">Open the prepared email again</a> or email info@prism.inc directly.</div></form><p class="email-help">Your inquiry is sent only when you send the email from your email application.</p></div></div></section>'''
 
+HOME, PRODUCTS, SERVICES, ABOUT, CONTACT = enrich_pages(HOME, PRODUCTS, SERVICES, ABOUT, CONTACT)
+
 PAGES = [('/', 'Out-of-network claims, resolved with precision', 'PRISM combines proprietary IDR software and consulting to help healthcare providers navigate out-of-network reimbursement recovery.', HOME), ('/products/', 'The PRISM IDR Platform', 'Explore eight connected modules for claims ingestion, eligibility, negotiation, submission and recovery analytics.', PRODUCTS), ('/services/', 'Expert IDR consulting and services', 'Explore PRISM support for calculations, negotiation, federal disputes, outsourced operations and advisory.', SERVICES), ('/about/', 'About PRISM', 'Payment Resolution & IDR System Management. Technology and specialist expertise with a provider perspective.', ABOUT), ('/contact/', 'Contact PRISM', 'Connect with PRISM at info@prism.inc to discuss your IDR workflow and recovery priorities.', CONTACT)]
 
 for path, title, description, content in PAGES:
     out = DIST / path.strip('/') / 'index.html'
     out.parent.mkdir(parents=True, exist_ok=True)
     hero_assets = f'<link rel="stylesheet" href="{asset_url("hero-scenes.css")}"><script src="{asset_url("hero-scenes.js")}" defer></script>' if path == '/' else ''
-    doc = f'''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex, nofollow"><meta name="theme-color" content="#07355b"><title>{escape(title)} | PRISM</title><meta name="description" content="{escape(description, quote=True)}"><link rel="canonical" href="{ORIGIN}{path}"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><meta property="og:title" content="{escape(title, quote=True)} | PRISM"><meta property="og:description" content="{escape(description, quote=True)}"><meta property="og:type" content="website"><meta property="og:url" content="{ORIGIN}{path}"><link rel="stylesheet" href="{asset_url("styles.css")}"><link rel="stylesheet" href="{asset_url("refinement.css")}"><script src="{asset_url("site.js")}" defer></script></head><body>{header(path)}<main id="main">{content}</main>{footer()}</body></html>'''
-    doc = doc.replace('</head>', hero_assets + '</head>')
+    process_assets = f'<link rel="stylesheet" href="{asset_url("process-experience.css")}"><script src="{asset_url("process-experience.js")}" defer></script>' if path in ('/', '/products/') else ''
+    doc = f'''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex, nofollow"><meta name="theme-color" content="#07355b"><title>{escape(title)} | PRISM</title><meta name="description" content="{escape(description, quote=True)}"><link rel="canonical" href="{ORIGIN}{path}"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><meta property="og:title" content="{escape(title, quote=True)} | PRISM"><meta property="og:description" content="{escape(description, quote=True)}"><meta property="og:type" content="website"><meta property="og:url" content="{ORIGIN}{path}"><link rel="stylesheet" href="{asset_url("styles.css")}"><link rel="stylesheet" href="{asset_url("refinement.css")}"><link rel="stylesheet" href="{asset_url("imagery.css")}"><script src="{asset_url("site.js")}" defer></script></head><body>{header(path)}<main id="main">{content}</main>{footer()}</body></html>'''
+    doc = doc.replace('</head>', hero_assets + process_assets + '</head>')
     out.write_text(doc, encoding='utf-8')
 
 error = '''<section class="page-hero"><div class="container"><div class="eyebrow">Page not found</div><h1>Let’s find<br>a clearer path.</h1><p class="lead" style="margin-top:32px">This page is unavailable. Explore PRISM’s platform and services from the homepage.</p><a class="btn" href="/" style="margin-top:32px">Return to PRISM</a></div></section>'''
-(DIST / '404.html').write_text(f'<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex, nofollow"><title>Page not found | PRISM</title><link rel="icon" href="/favicon.svg"><link rel="stylesheet" href="{asset_url("styles.css")}"><link rel="stylesheet" href="{asset_url("refinement.css")}"><script src="{asset_url("site.js")}" defer></script></head><body>{header("404")}<main id="main">{error}</main>{footer()}</body></html>')
+(DIST / '404.html').write_text(f'<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex, nofollow"><title>Page not found | PRISM</title><link rel="icon" href="/favicon.svg"><link rel="stylesheet" href="{asset_url("styles.css")}"><link rel="stylesheet" href="{asset_url("refinement.css")}"><link rel="stylesheet" href="{asset_url("imagery.css")}"><script src="{asset_url("site.js")}" defer></script></head><body>{header("404")}<main id="main">{error}</main>{footer()}</body></html>')
 (DIST / 'robots.txt').write_text('User-agent: *\nDisallow: /\n')
 print(f'Generated {len(PAGES)} PRISM pages plus a custom 404.')
