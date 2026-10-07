@@ -1,70 +1,85 @@
-/* An isolated accordion: one narrative, three work areas, a shared record. */
+/* Claim constellation: keyboard tabs and an explicitly started, pausable tour. */
 (() => {
   'use strict';
   document.querySelectorAll('[data-process-experience]').forEach(section => {
-    const room = section.querySelector('.px-control-room');
-    const buttons = [...section.querySelectorAll('[data-px-stage]')];
-    const panels = buttons.map(button => section.querySelector(`#${button.getAttribute('aria-controls')}`));
-    const stations = [...section.querySelectorAll('[data-px-station]')];
-    const groupButtons = [...section.querySelectorAll('[data-px-select]')];
-    const status = section.querySelector('[data-px-status]');
+    const room = section.querySelector('.px-constellation');
+    const tabs = [...section.querySelectorAll('[data-px-stage]')];
+    const panels = tabs.map(tab => section.querySelector(`#${tab.getAttribute('aria-controls')}`));
+    const routes = [...section.querySelectorAll('[data-px-route]')];
     const flow = section.querySelector('.px-flow');
-    const motion = section.querySelector('.px-motion');
+    const tour = section.querySelector('.px-tour');
+    const progress = section.querySelector('.px-tour-track > span');
+    const status = section.querySelector('[data-px-status]');
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
-    let manuallyPaused = false, visible = true;
+    const duration = 7500;
+    let active = 0, wantsPlay = false, started = false, visible = true;
+    let elapsed = 0, previousTime = null, frame = 0;
 
-    function select(index, announce = true) {
-      const group = buttons[index].dataset.pxGroup;
-      room.dataset.pxGroup = group;
-      buttons.forEach((button, i) => {
-        const selected = index === i;
-        button.setAttribute('aria-expanded', String(selected));
-        button.setAttribute('aria-disabled', String(selected));
-        button.closest('.px-stage').classList.toggle('is-active', selected);
-        button.querySelector('.px-stage-sign').textContent = selected ? '−' : '+';
-        panels[i].hidden = !selected;
+    function select(index, focus = false, announce = true) {
+      active = (index + tabs.length) % tabs.length;
+      tabs.forEach((tab, i) => {
+        tab.setAttribute('aria-selected', String(i === active));
+        tab.tabIndex = i === active ? 0 : -1;
+        panels[i].hidden = i !== active;
+        routes[i].classList.toggle('is-active', i === active);
       });
-      stations.forEach(station => {
-        const selected = station.dataset.pxStation === group;
-        station.classList.toggle('is-active', selected);
-        station.querySelector('button').setAttribute('aria-pressed', String(selected));
-      });
-      flow.setAttribute('d', section.querySelector(`[data-px-route="${group}"]`).getAttribute('d'));
-      if (announce) {
-        const label = buttons[index].querySelector('span:nth-child(2)').textContent;
-        status.textContent = `${label}. ${group === 'shared' ? 'The shared record supports every stage.' : `${group[0].toUpperCase() + group.slice(1)} is highlighted. Deadlines and audit history remain connected.`}`;
-      }
+      room.dataset.pxActive = String(active);
+      flow.setAttribute('d', routes[active].getAttribute('d'));
+      elapsed = 0; progress.style.transform = 'scaleX(0)';
+      if (focus) tabs[active].focus({preventScroll:true});
+      if (announce) status.textContent = `Stage ${active + 1} of 5: ${tabs[active].getAttribute('aria-label')}.`;
     }
-
-    buttons.forEach((button, index) => {
-      button.addEventListener('click', () => { if (button.getAttribute('aria-expanded') !== 'true') select(index); });
-      button.addEventListener('keydown', event => {
+    const canRun = () => wantsPlay && visible && !document.hidden && !reduced.matches;
+    function tick(time) {
+      frame = 0;
+      if (!canRun()) { previousTime = null; return; }
+      if (previousTime !== null) elapsed += time - previousTime;
+      previousTime = time;
+      if (elapsed >= duration) select(active + 1);
+      progress.style.transform = `scaleX(${Math.min(elapsed / duration, 1)})`;
+      frame = requestAnimationFrame(tick);
+    }
+    function syncTour() {
+      const running = canRun();
+      room.dataset.pxPlaying = String(wantsPlay);
+      room.dataset.pxMotion = running ? 'running' : 'paused';
+      tour.setAttribute('aria-pressed', String(wantsPlay));
+      tour.querySelector('[data-px-tour-label]').textContent = wantsPlay ? 'Pause journey' : started ? 'Resume journey' : 'Play the journey';
+      tour.querySelector('.px-tour-icon').textContent = wantsPlay ? 'Ⅱ' : '▷';
+      if (running && !frame) { previousTime = null; frame = requestAnimationFrame(tick); }
+      if (!running) { cancelAnimationFrame(frame); frame = 0; previousTime = null; }
+    }
+    function manualSelect(index, focus = false) {
+      wantsPlay = false; syncTour(); select(index, focus);
+    }
+    tabs.forEach((tab, index) => {
+      tab.addEventListener('click', () => manualSelect(index));
+      tab.addEventListener('keydown', event => {
         if (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
         let target;
-        if (event.key === 'ArrowDown') target = (index + 1) % buttons.length;
-        if (event.key === 'ArrowUp') target = (index + buttons.length - 1) % buttons.length;
+        if (event.key === 'ArrowRight' || event.key === 'ArrowDown') target = index + 1;
+        if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') target = index - 1;
         if (event.key === 'Home') target = 0;
-        if (event.key === 'End') target = buttons.length - 1;
+        if (event.key === 'End') target = tabs.length - 1;
         if (target === undefined) return;
-        event.preventDefault();
-        buttons[target].focus({preventScroll: true});
+        event.preventDefault(); manualSelect(target, true);
       });
     });
-    groupButtons.forEach(button => button.addEventListener('click', () => select(Number(button.dataset.pxSelect))));
-
-    function updateMotion() {
-      room.dataset.pxMotion = manuallyPaused || reduced.matches || !visible || document.hidden ? 'paused' : 'running';
-      motion.hidden = reduced.matches;
-      motion.setAttribute('aria-pressed', String(manuallyPaused));
-      motion.querySelector('.px-motion-text').textContent = manuallyPaused ? 'Resume motion' : 'Pause motion';
-      motion.querySelector('span').textContent = manuallyPaused ? '▷' : 'Ⅱ';
-    }
-    motion.addEventListener('click', () => { manuallyPaused = !manuallyPaused; updateMotion(); });
-    document.addEventListener('visibilitychange', updateMotion);
-    reduced.addEventListener('change', updateMotion);
+    section.querySelector('.px-prev').addEventListener('click', () => manualSelect(active - 1));
+    section.querySelector('.px-next').addEventListener('click', () => manualSelect(active + 1));
+    tour.addEventListener('click', () => {
+      if (reduced.matches) return;
+      wantsPlay = !wantsPlay; started = true; syncTour();
+      status.textContent = wantsPlay ? 'Journey playing. Each stage stays in view for several seconds. Use Pause journey to stop.' : 'Journey paused.';
+    });
+    section.addEventListener('focusin', event => {
+      if (wantsPlay && event.target.closest('.px-panel')) { wantsPlay = false; syncTour(); }
+    });
+    document.addEventListener('visibilitychange', syncTour);
+    reduced.addEventListener('change', () => { if (reduced.matches) wantsPlay = false; syncTour(); });
     if ('IntersectionObserver' in window) {
-      new IntersectionObserver(entries => { visible = entries[0].isIntersecting; updateMotion(); }, {threshold:.05}).observe(room);
+      new IntersectionObserver(entries => { visible = entries[0].isIntersecting; syncTour(); }, {threshold:.12}).observe(room);
     }
-    select(0, false); updateMotion();
+    select(0, false, false); syncTour();
   });
 })();
