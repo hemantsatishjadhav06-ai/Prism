@@ -1,0 +1,170 @@
+{
+  "revision": "v4",
+  "purpose": "Eleven independent editorial photos, separate from hero film source frames and posters",
+  "generation_settings": {
+    "resolution": "2k",
+    "quality": "high"
+  },
+  "conversion": "FFmpeg scale and crop to 1600px width, libwebp quality 84",
+  "images": [
+    {
+      "asset": "prism-home-specialists-v4.webp",
+      "generation_id": "05cf7f9f-3b9a-4ba6-ab23-d649d3f2d6b6",
+      "model": "gpt_image_2",
+      "source_asset": "prism-home-specialists-v4.png",
+      "dimensions": [
+        1600,
+        1066
+      ],
+      "bytes": 118784,
+      "sha256": "12dac11e3afdeaf1559f2bb3c4870dc507c293f091be78ac0eb06e23ab037a0a"
+    },
+    {
+      "asset": "prism-home-partnership-v4.webp",
+      "generation_id": "432bd201-949a-4824-9178-295a4459bd3d",
+      "model": "gpt_image_2",
+      "source_asset": "prism-home-partnership-v4.png",
+      "dimensions": [
+        1600,
+        1066
+      ],
+      "bytes": 122388,
+      "sha256": "e94ba9f2ab2f29838c1fd18944e96533f5b381dcd1aff0c0fd1a1aae5395cc6b"
+    },
+    {
+      "asset": "prism-specialty-emergency-v4.webp",
+      "generation_id": "a9d3d59e-116c-4c6c-8eec-d9e755c32a4e",
+      "model": "gpt_image_2",
+      "source_asset": "prism-specialty-emergency-v4.png",
+      "dimensions": [
+        1600,
+        900
+      ],
+      "bytes": 133558,
+      "sha256": "160cf210ed3c7b3203c5b2cdd2c5bc39da5997578937eed5b3cc423b248982e4"
+    },
+    {
+      "asset": "prism-specialty-anesthesia-v4.webp",
+      "generation_id": "9f377a14-66a3-4a14-a2b5-f86831638901",
+      "model": "gpt_image_2",
+      "source_asset": "prism-specialty-anesthesia-v4.png",
+      "dimensions": [
+        1600,
+        900
+      ],
+      "bytes": 112298,
+      "sha256": "d89dfe85613bc0979d887f4a8fd119a09b8ee1bd5247b6b8610896aa5e05c25e"
+    },
+    {
+      "asset": "prism-specialty-radiology-v4.webp",
+      "generation_id": "09595ee1-931f-4cf6-be42-a22ff0d08e46",
+      "model": "gpt_image_2",
+      "source_asset": "prism-specialty-radiology-v4.png",
+      "dimensions": [
+        1600,
+        900
+      ],
+      "bytes": 117086,
+      "sha256": "e4c3eaac25e74eb21d4ab537f60f0b2596b656d83cac012c971a0c51a95f8a6f"
+    },
+    {
+      "asset": "prism-platform-case-review-v4.webp",
+      "generation_id": "0d681ab7-83a4-4a10-8623-477905e9d37e",
+      "model": "gpt_image_2",
+      "source_asset": "prism-platform-case-review-v4.png",
+      "dimensions": [
+        1600,
+        900
+      ],
+      "bytes": 103912,
+      "sha256": "98f19a061df8c0ee0549d6262804d0520f9e3c3282698da16aaff1a75b233b89"
+    },
+    {
+      "asset": "prism-services-operations-v4.webp",
+      "generation_id": "5318f2a2-aeed-485a-857f-1c9e63bd5c4b",
+      "model": "gpt_image_2",
+      "source_asset": "prism-services-operations-v4.png",
+      "dimensions": [
+        1600,
+        900
+      ],
+      "bytes": 216718,
+      "sha256": "3f0747e2572c8d7680daa8e18c25e79a74d1c39d59d818b39a02c2b27b85b025"
+    },
+    {
+      "asset": "prism-services-provider-v4.webp",
+      "generation_id": "935176fa-b160-4df9-8b34-8cea023009de",
+      "model": "gpt_image_2",
+      "source_asset": "prism-services-provider-v4.png",
+      "dimensions": [
+        1600,
+        1066
+      ],
+      "bytes": 100032,
+      "sha256": "4d9bbfe93b9b8a53d34f1088f46823bc15155d7b3f03e1967ae84ae4064aacae"
+    },
+    {
+      "asset": "prism-about-clinical-v4.webp",
+      "generation_id": "247bf3f3-9830-4b69-9061-99eed6ca37ee",
+      "model": "gpt_image_2",
+      "source_asset": "prism-about-clinical-v4.png",
+      "dimensions": [
+        1600,
+        1066
+      ],
+      "bytes": 79058,
+      "sha256": "bcdf7263d6293bedf4dfc16e1031df3c5b8cafb02e7b8c182f4428939b485786"
+    },
+    {
+      "asset": "prism-about-coordination-v4.webp",
+      "generation_id": "fe5c28ea-078b-4d18-8675-9924392c08e0",
+      "model": "gpt_image_2",
+      "source_asset": "prism-about-coordination-v4.png",
+      "dimensions": [
+        1600,
+        900
+      ],
+      "bytes": 62682,
+      "sha256": "a481c1f92af326a1eb48f52078e75591eb2089421e70bd9fba89277e79df0040"
+    },
+    {
+      "asset": "prism-contact-consultation-v4.webp",
+      "generation_id": "76fe880e-6c99-4e01-bfc2-330348b17a0b",
+      "model": "gpt_image_2",
+      "source_asset": "prism-contact-consultation-v4.png",
+      "dimensions": [
+        1600,
+        1066
+      ],
+      "bytes": 108246,
+      "sha256": "7dff3255884f375cf376141bf29b7ab15ab18af6e9096ebd9285925801ed8e34"
+    }
+  ],
+  "placements": [
+    "/assets/prism-home-specialists-v4.webp",
+    "/assets/prism-home-partnership-v4.webp",
+    "/assets/prism-specialty-emergency-v4.webp",
+    "/assets/prism-specialty-anesthesia-v4.webp",
+    "/assets/prism-specialty-radiology-v4.webp",
+    "/assets/prism-platform-case-review-v4.webp",
+    "/assets/prism-services-operations-v4.webp",
+    "/assets/prism-services-provider-v4.webp",
+    "/assets/prism-about-clinical-v4.webp",
+    "/assets/prism-about-coordination-v4.webp",
+    "/assets/prism-contact-consultation-v4.webp"
+  ],
+  "validation": {
+    "unique_assets": 11,
+    "unique_hashes": 11,
+    "video_poster_reuse": false,
+    "all_images_visually_reviewed": true
+  },
+  "content_sources": [
+    "User-supplied PRISM Healthcare Solutions brochure, October 2 2026",
+    "https://prism.inc/products",
+    "https://prism.inc/services",
+    "https://prism.inc/about",
+    "https://www.cms.gov/initiatives/no-surprise-billing/overview/engaging-idr/about-independent-dispute-resolution"
+  ],
+  "design_reference": "https://www.r1rcm.com/"
+}

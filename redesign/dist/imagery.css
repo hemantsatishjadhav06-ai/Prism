@@ -1,7 +1,7 @@
-/* Editorial photography: depth, generous framing, and calm blue accents. */
+/* Eleven distinct editorial photographs, separate from the hero films. */
 .editorial-section{position:relative;padding:20px 0 80px;background:#e5eef3}
 .editorial-feature{position:relative;display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);align-items:center;isolation:isolate}
-.editorial-photo{position:relative;margin:0;overflow:hidden;border-radius:5px;box-shadow:0 24px 65px #0b355b1a;aspect-ratio:16/10;background:#bed2df}
+.editorial-photo{position:relative;margin:0;overflow:hidden;border-radius:5px;box-shadow:0 24px 65px #0b355b1a;aspect-ratio:16/9;background:#bed2df}
 .editorial-photo>img{width:100%;height:100%;object-fit:cover;object-position:center}
 .editorial-photo:after{content:"";position:absolute;inset:65% 0 0;background:linear-gradient(transparent,#071f3699);pointer-events:none}
 .editorial-photo>figcaption{position:absolute;bottom:20px;left:24px;color:#fff;font-size:11px;letter-spacing:.045em;z-index:1}
@@ -13,9 +13,9 @@
 .editorial-copy>p{font-size:16px;line-height:1.7;color:#536c7e;margin-top:22px;max-width:440px}
 .editorial-tags{display:flex;flex-wrap:wrap;gap:7px;margin-top:27px}
 .editorial-tags>span{padding:6px 9px;border:1px solid #c5dbe8;background:#f1f7fa;color:#275b7a;font-size:11px;border-radius:3px}
-.editorial-operations .editorial-photo{aspect-ratio:16/10}
-.solution-card.solution-partnership img{object-position:center;opacity:.76}
-.solution-card .solution-care-photo{object-position:58% center;opacity:.72}
+.editorial-operations .editorial-photo{aspect-ratio:16/9}
+.solution-card.solution-partnership img{object-position:72% center;opacity:.76}
+.solution-card .solution-care-photo{object-position:85% center;opacity:.72}
 .solution-card.solution-partnership:after{background:linear-gradient(180deg,#031a32a8,transparent 42%,#031a32ef)}
 .solution-card:has(.solution-care-photo):after{background:linear-gradient(180deg,#031a32b3,transparent 42%,#031a32ed)}
 .specialty-gallery{padding-top:65px;margin-top:60px;border-top:1px solid #cbdce6}
@@ -26,7 +26,7 @@
 .specialty-gallery-heading .text-link span{display:inline-block;margin-left:12px}
 .specialty-photo-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px}
 .specialty-photo-card{min-width:0;overflow:hidden;border:1px solid #d6e4ed;border-radius:5px;background:#f7fafc;box-shadow:0 8px 18px #163b5906}
-.specialty-photo{position:relative;aspect-ratio:16/10;overflow:hidden;background:#dae5ec}
+.specialty-photo{position:relative;aspect-ratio:16/9;overflow:hidden;background:#dae5ec}
 .specialty-photo>img{width:100%;height:100%;object-fit:cover;transition:transform .8s cubic-bezier(.2,.7,.3,1)}
 .specialty-index{position:absolute;top:14px;left:14px;display:grid;place-items:center;width:35px;height:35px;border-radius:50%;border:1px solid #ffffff80;background:#07355bd4;backdrop-filter:blur(10px);color:white;font-size:11px}
 .specialty-copy{padding:23px 23px 26px;position:relative;background:linear-gradient(145deg,#fff,#eff6fa)}
@@ -41,7 +41,7 @@
 .service-editorial-photo figcaption span{display:block;color:#6e8595;font-size:10px;margin-top:5px}
 .human-photo-stack{position:relative;padding:0 43px 106px 0;min-width:0;isolation:isolate}
 .human-photo-stack:before{content:"";position:absolute;inset:24px 20px 90px 24px;border:1px solid #a5c4d6;border-radius:5px;z-index:-1}
-.human-photo-main{margin:0;aspect-ratio:1.08;border:7px solid #fff;border-radius:6px;overflow:hidden;box-shadow:0 20px 60px #123d5a1a;background:#e1eaf0}
+.human-photo-main{margin:0;aspect-ratio:3/2;border:7px solid #fff;border-radius:6px;overflow:hidden;box-shadow:0 20px 60px #123d5a1a;background:#e1eaf0}
 .human-photo-main img{width:100%;height:100%;object-fit:cover;object-position:center}
 .human-photo-inset{position:absolute;right:0;bottom:30px;width:66%;margin:0;background:white;border:7px solid white;border-radius:5px;box-shadow:0 15px 38px #082f5129;transform:rotate(2deg);overflow:hidden}
 .human-photo-inset img{aspect-ratio:16/9;object-fit:cover;width:100%;height:auto}

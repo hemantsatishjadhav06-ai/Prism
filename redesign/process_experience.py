@@ -1,56 +1,58 @@
-"""The connected process explorer. Kept separate from page generation."""
+"""An explanatory claim control room shared by Home and Platform."""
 from html import escape
 
-
 WORKFLOW = [
-    ('Intake & Eligibility Screening', 'Start with a supported case.', 'Bring claim information together, review eligibility and validate the qualifying payment amount against relevant benchmarks.', 'Claims Ingest|Eligibility Engine|QPA Validator', [1, 2, 3], 'Eligibility review and payment analysis'),
-    ('Open Negotiation', 'Prepare the next conversation.', 'Connect negotiation documentation with the case timeline, so the next action is clear to your team.', 'Negotiation Workflow', [4], 'Negotiation documents and a case timeline'),
-    ('Federal IDR Filing & Arbitration', 'Bring the evidence together.', 'Prepare the filing, supporting documents and offer strategy for the selected independent dispute resolution entity.', 'IDRE Submission|Deadline Sentinel', [5, 7], 'A filing and supporting evidence packet'),
-    ('Recovery & Reconciliation', 'Keep recovery in view.', 'Connect recovery reporting and payer performance with the case record, so your team can review outcomes and the next follow-up.', 'Recovery Analytics', [6], 'Recovery reporting and follow-up visibility'),
-    ('Audit-Ready Document Vault', 'Keep the evidence connected.', 'Maintain the documents, timestamps and actions behind each case in a connected record.', 'Audit Trail|Deadline Sentinel', [8, 7], 'A traceable history of the case'),
+ ('Intake & Eligibility Screening','Start with a supported case.','Bring claim information together, review eligibility and validate the qualifying payment amount against relevant benchmarks.','Claims Ingest|Eligibility Engine|QPA Validator',[1,2,3],'Eligibility review and payment analysis'),
+ ('Open Negotiation','Prepare the next conversation.','Connect negotiation documentation with the case timeline, so the next action is clear to your team.','Negotiation Workflow',[4],'Negotiation documents and a case timeline'),
+ ('Federal IDR Filing & Arbitration','Bring the evidence together.','Prepare the filing, supporting documents and offer strategy for the selected independent dispute resolution entity.','IDRE Submission|Deadline Sentinel',[5,7],'A filing and supporting evidence packet'),
+ ('Recovery & Reconciliation','Keep recovery in view.','Connect recovery reporting and payer performance with the case record, so your team can review outcomes and the next follow-up.','Recovery Analytics',[6],'Recovery reporting and follow-up visibility'),
+ ('Audit-Ready Document Vault','Keep the evidence connected.','Maintain the documents, timestamps and actions behind each case in a connected record.','Audit Trail|Deadline Sentinel',[8,7],'A traceable history of the case'),
 ]
-
+STAGE_DETAILS = [
+ ('Explanation of Benefits (EOB) documents, remittances and claim information','Review eligibility, payment context and the calculation supporting the case.','Claim information enters a structured review.','Intake & eligibility','Intake'),
+ ('The reviewed case and negotiation documentation','Prepare the documentation and coordinate the negotiation timeline.','The next conversation has a clear starting point.','Open negotiation','Negotiate'),
+ ('Case evidence, supporting documents and offer strategy','Coordinate entity selection, the filing and supporting case materials.','Evidence and deadlines move with the filing.','Federal IDR','File IDR'),
+ ('Case outcomes and recovery information','Review recovery reporting, payer performance and the next follow-up.','Reporting remains connected to the case.','Recovery','Recover'),
+ ('Documents, timestamps and actions from the workflow','Maintain an organized case history for review and follow-up.','The record is organized from the start.','Audit record','Audit'),
+]
+MODULES = [
+ ('Claims Ingest','Bring Explanation of Benefits (EOB) documents and remittances into the workflow with SFTP and X12 835 parsing.','EOBs & remittances',[0]),
+ ('Eligibility Engine','Classify claims by NSA, state law, ERISA or out-of-scope status.','Scope & eligibility',[0]),
+ ('QPA Validator','Compare the Qualifying Payment Amount (QPA) with FAIR Health, geographic and historical rate benchmarks.','Payment context',[0]),
+ ('Negotiation Workflow','Prepare Open Negotiation letters and manage the negotiation timeline.','Letters & timeline',[1]),
+ ('IDRE Submission','Assemble filings and supporting information for the selected independent dispute resolution entity (IDRE).','Filing & evidence',[2]),
+ ('Recovery Analytics','Review win rates, payer performance and recovery trends.','Recovery reporting',[3]),
+ ('Deadline Sentinel','Track case deadlines and route items that need attention.','Dates & follow-up',[0,1,2,3,4]),
+ ('Audit Trail','Keep the documents, timestamps and actions behind each case together.','A connected history',[0,1,2,3,4]),
+]
 ICONS = [
-    '<rect x="12" y="10" width="24" height="31" rx="3"/><path d="M19 10V7a5 5 0 0 1 10 0v3 M17 26l5 5 10-11"/>',
-    '<path d="M34 25c3-2 5-6 5-10C39 8 32 3 24 3S9 8 9 15c0 3 1 5 3 7l-3 8 9-3c5 2 11 1 16-2Z M20 33c4 5 11 6 16 4l7 3-2-7c2-2 3-5 3-7 0-3-2-6-5-8"/>',
-    '<path d="m27 8 13 13 M22 13l13 13 M24 11l5-5 13 13-5 5 M20 15l5 5-13 13-5-5z M24 34h18v7H24z"/>',
-    '<rect x="4" y="11" width="40" height="27" rx="3"/><circle cx="24" cy="24" r="7"/><path d="M4 19a9 9 0 0 0 9-8 M35 11a9 9 0 0 0 9 8 M4 30a9 9 0 0 1 9 8 M35 38a9 9 0 0 1 9-8"/>',
-    '<rect x="7" y="8" width="34" height="34" rx="4"/><circle cx="24" cy="25" r="8"/><path d="M24 21v8 M20 25h8 M14 8V4h20v4"/>',
+ '<rect x="6" y="5" width="12" height="16" rx="2"/><path d="M9 5V3h6v2M9 12l2 2 4-4"/>',
+ '<path d="M18 12a7 7 0 0 1-8 4l-5 2 1-5a6 6 0 0 1-2-4c0-4 4-6 8-6s8 2 8 6c0 1-1 3-2 3Z M11 20c2 1 4 1 6 0l4 1-1-4c1-1 2-3 1-5"/>',
+ '<path d="m13 4 7 7M11 6l7 7M12 5l3-3 7 7-3 3M10 8l3 3-7 7-3-3zM12 18h9v4h-9z"/>',
+ '<rect x="2" y="6" width="20" height="14" rx="2"/><circle cx="12" cy="13" r="3"/><path d="M2 10a4 4 0 0 0 4-4M18 6a4 4 0 0 0 4 4M2 16a4 4 0 0 1 4 4M18 20a4 4 0 0 1 4-4"/>',
+ '<rect x="4" y="4" width="16" height="18" rx="2"/><path d="M8 4V2h8v2M8 10h8M8 14h8M8 18h5"/>',
 ]
-
+def _icon(index):
+ return f'<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">{ICONS[index]}</svg>'
 
 def process_section():
-    tabs = []
-    panels = []
-    for i, (name, title, copy, modules, anchors, outcome) in enumerate(WORKFLOW):
-        selected = i == 0
-        tabs.append(f'''<button type="button" class="px-node" role="tab" id="px-tab-{i}" aria-controls="px-panel-{i}" aria-selected="{str(selected).lower()}" tabindex="{0 if selected else -1}" data-px-index="{i}">
-          <span class="px-node-pad" aria-hidden="true"></span><span class="px-node-cube" aria-hidden="true"><svg width="48" height="48" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">{ICONS[i]}</svg></span>
-          <span class="px-node-number" aria-hidden="true">0{i + 1}</span><span class="px-node-label">{escape(name)}</span><span class="px-node-dot" aria-hidden="true"></span></button>''')
-        chips = ''.join(f'<a href="/products/#module-{anchor}">{escape(label)}<span aria-hidden="true">↗</span></a>' for label, anchor in zip(modules.split('|'), anchors))
-        panels.append(f'''<div class="px-panel" id="px-panel-{i}" role="tabpanel" aria-labelledby="px-tab-{i}" tabindex="0"{' hidden' if not selected else ''}>
-          <div class="px-detail-heading"><span class="px-step-kicker">STEP 0{i + 1} <span aria-hidden="true">/</span> 05</span><h3>{escape(title)}</h3><p class="px-detail-stage">{escape(name)}</p></div>
-          <div class="px-detail-body"><p class="px-detail-copy">{escape(copy)}</p><div class="px-modules" aria-label="Connected platform modules">{chips}</div><div class="px-output"><span class="px-output-icon" aria-hidden="true">↳</span><div><span>The output</span><p>{escape(outcome)}</p></div></div><a class="px-demo-link" href="/contact/?interest=Platform%20demo">Walk through the platform <span aria-hidden="true">↗</span></a></div></div>''')
-    return '''<section class="section px-section" id="process" data-process-experience>
-      <div class="container"><div class="section-head px-heading"><div class="eyebrow">The PRISM process</div><div><h2>Connected work.<br>Clear next steps.</h2><p>Software connected with PRISM specialists, from the first claim review to recovery reporting.</p></div></div>
-      <div class="px-explorer" data-px-active="0">
-        <div class="px-stage-shell">
-          <div class="px-stage-top"><span class="px-stage-label"><span aria-hidden="true"></span>ONE CONNECTED WORKFLOW</span><button class="px-motion" type="button" aria-pressed="false" hidden><span class="px-motion-symbol" aria-hidden="true">Ⅱ</span><span class="px-motion-label">Pause motion</span></button></div>
-          <div class="px-stage" data-px-stage>
-            <div class="px-space" aria-hidden="true"><div class="px-plane px-plane-base"></div><div class="px-plane px-plane-mid"></div><div class="px-plane px-plane-top"></div><div class="px-light-column"></div></div>
-            <svg class="px-network" viewBox="0 0 1000 440" preserveAspectRatio="none" fill="none" aria-hidden="true">
-              <path class="px-route-base" d="M100 187L300 152L500 198L700 152L900 187"/>
-              <path class="px-route-secondary" d="M100 187V287L500 347L900 287V187 M300 152V275L500 315L700 275V152 M500 198V347"/>
-              <path class="px-route-pulse" d="M100 187L300 152L500 198L700 152L900 187"/>
-              <g class="px-focus-routes"><path data-px-route="0" d="M100 187V287L500 347"/><path data-px-route="1" d="M300 152V275L500 315V347"/><path data-px-route="2" d="M500 198V347"/><path data-px-route="3" d="M700 152V275L500 315V347"/><path data-px-route="4" d="M900 187V287L500 347"/></g>
-              <circle class="px-network-end" cx="500" cy="347" r="5"/>
-            </svg>
-            <div class="px-tabs" role="tablist" aria-label="Explore the five steps in PRISM’s IDR lifecycle" data-process-tabs>''' + ''.join(tabs) + '''</div>
-            <div class="px-foundation" aria-hidden="true"><span class="px-foundation-icon">⌘</span><span>Connected case record</span><span class="px-foundation-lights"><i></i><i></i><i></i></span></div>
-            <div class="px-layer-labels" aria-hidden="true"><span>01 &nbsp; Workflow</span><span>02 &nbsp; Coordination</span><span>03 &nbsp; Case history</span></div>
-          </div>
-          <div class="px-stage-bottom"><p><span class="px-interaction-dot" aria-hidden="true"></span>Select a stage to follow the connections.</p><span class="px-stage-count" aria-hidden="true">01 <span>/ 05</span></span></div>
-        </div>
-        <div class="px-detail-shell">''' + ''.join(panels) + '''<div class="px-detail-footer"><p>Documents, deadlines and case history stay connected throughout the lifecycle.</p><button type="button" class="px-next" data-px-next hidden><span>Next stage</span><span aria-hidden="true">→</span></button></div></div>
-      </div></div>
-    </section>'''
+ tabs,panels,modules=[],[],[]
+ for i,(name,title,copy,labels,anchors,outcome) in enumerate(WORKFLOW):
+  input_copy,action,note,short_name,mobile_name=STAGE_DETAILS[i]
+  tabs.append(f'''<button class="px-phase" type="button" role="tab" id="px-tab-{i}" aria-controls="px-panel-{i}" aria-selected="{str(i==0).lower()}" tabindex="{0 if i==0 else -1}" data-px-phase="{i}" data-px-modules="{','.join(map(str,dict.fromkeys(anchors+[7,8])))}" data-px-short="{escape(short_name,quote=True)}" data-px-case-note="{escape(note,quote=True)}"><span class="px-phase-top"><span class="px-phase-no">0{i+1}</span>{_icon(i)}</span><span class="px-phase-name">{escape(name)}</span><span class="px-phase-mobile" aria-hidden="true">{mobile_name}</span><span class="px-phase-state" aria-hidden="true">{'In focus' if i==0 else 'Explore stage'}<span>↗</span></span></button>''')
+  links=''.join(f'<a href="/products/#module-{a}">{escape(label)} <span aria-hidden="true">↗</span></a>' for label,a in zip(labels.split('|'),anchors))
+  panels.append(f'''<div class="px-panel" id="px-panel-{i}" role="tabpanel" aria-labelledby="px-tab-{i}" tabindex="0"{' hidden' if i else ''}><div class="px-panel-top"><span class="px-detail-kicker">Stage 0{i+1} <span>/ 05</span></span><span class="px-detail-icon">{_icon(i)}</span></div><h3>{escape(title)}</h3><p class="px-stage-copy">{escape(copy)}</p><dl class="px-case-work"><div><dt><span aria-hidden="true">↘</span>What comes in</dt><dd>{escape(input_copy)}</dd></div><div><dt><span aria-hidden="true">◉</span>What the specialist does</dt><dd>{escape(action)}</dd></div><div class="px-work-output"><dt><span aria-hidden="true">↗</span>What moves forward</dt><dd>{escape(outcome)}</dd></div></dl><div class="px-software"><span>Software supporting this stage</span><div>{links}</div></div></div>''')
+ for i,(name,copy,hint,stages) in enumerate(MODULES):
+  modules.append(f'''<button type="button" class="px-module{' px-module-shared' if i>5 else ''}" data-px-module="{i+1}" data-px-stages="{','.join(map(str,stages))}" data-px-description="{escape(copy,quote=True)}" aria-pressed="{str(i==0).lower()}" aria-controls="px-module-inspector"{' hidden' if 2<i<6 else ''}><span class="px-module-top"><span>0{i+1}</span><span class="px-module-port" aria-hidden="true"></span></span><strong>{escape(name)}</strong><span class="px-module-hint">{escape(hint)}</span></button>''')
+ return '''<section class="section px-section" id="process" data-process-experience><div class="container"><div class="section-head px-heading"><div class="eyebrow">The PRISM process</div><div><h2>A claim moves forward.<br>Everything stays connected.</h2><p>Explore how the software, specialist work and supporting record come together across the IDR lifecycle.</p></div></div>
+ <div class="px-control-room" data-px-active="0" data-px-view="stage"><div class="px-room-header"><div><span class="px-room-mark" aria-hidden="true">◈</span><div><h3>The claim control room</h3><p>Five stages. One connected case.</p></div></div><div class="px-room-tools"><span class="px-guide">Choose a stage <span aria-hidden="true">→</span> Inspect its connections</span><button class="px-motion" type="button" aria-pressed="false" hidden><span aria-hidden="true">Ⅱ</span><span class="px-motion-text">Pause motion</span></button></div></div>
+ <div class="px-journey"><div class="px-journey-track" aria-hidden="true"><span></span></div><div class="px-phase-tabs" role="tablist" aria-label="Explore the five stages of a claim" aria-orientation="horizontal" data-process-tabs>'''+''.join(tabs)+'''</div></div>
+ <div class="px-workbench"><div class="px-detail-column">'''+''.join(panels)+'''<div class="px-detail-actions"><a href="/contact/?interest=Platform%20demo">Walk through the platform <span aria-hidden="true">↗</span></a><button type="button" class="px-next" hidden>Next stage <span aria-hidden="true">→</span></button></div></div>
+ <div class="px-system"><div class="px-system-heading"><div><span class="px-section-label">The connected system</span><h3>One record.<br>Many coordinated actions.</h3></div><div class="px-view-controls" role="group" aria-label="Connection view"><button type="button" data-px-view="stage" aria-pressed="true">This stage</button><button type="button" data-px-view="all" aria-pressed="false">Whole system</button></div></div>
+ <div class="px-network-space" data-px-network><div class="px-plane px-plane-one" aria-hidden="true"></div><div class="px-plane px-plane-two" aria-hidden="true"></div><svg class="px-wires" fill="none" aria-hidden="true"><g class="px-wire-lines"></g><g class="px-wire-packets"></g></svg>
+ <div class="px-dossier-wrap"><div class="px-dossier-back px-dossier-back-two" aria-hidden="true"></div><div class="px-dossier-back px-dossier-back-one" aria-hidden="true"></div><div class="px-dossier" data-px-dossier><div class="px-dossier-top"><span class="px-dossier-file" aria-hidden="true">'''+_icon(4)+'''</span><div><span class="px-dossier-eyebrow">Shared case dossier</span><strong>Context travels with the claim.</strong></div><span class="px-dossier-dot" aria-hidden="true"></span></div><div class="px-dossier-fields"><span>Claim facts</span><span>Supporting evidence</span><span>Activity history</span></div><div class="px-dossier-focus"><span class="px-focus-dot" aria-hidden="true"></span><span data-px-case-focus>Claim information enters a structured review.</span></div></div></div>
+ <div class="px-module-caption"><span data-px-connection-count>3 stage modules + 2 shared</span><span>Select a module to inspect <span aria-hidden="true">↘</span></span></div><div class="px-module-grid" aria-label="Connected software modules">'''+''.join(modules[:6])+'''</div><div class="px-shared-label"><span aria-hidden="true">↳</span> Connected at every stage</div><div class="px-shared-module-grid" aria-label="Modules shared by every stage">'''+''.join(modules[6:])+'''</div></div>
+ <div class="px-inspector" id="px-module-inspector"><div class="px-inspector-icon" aria-hidden="true">↳</div><div><div class="px-inspector-title"><strong data-px-module-title>Claims Ingest</strong><a data-px-module-link href="/products/#module-1" aria-label="Explore Claims Ingest">Explore module <span aria-hidden="true">↗</span></a></div><p data-px-module-copy>Bring Explanation of Benefits (EOB) documents and remittances into the workflow with SFTP and X12 835 parsing.</p><span class="px-inspector-used" data-px-module-used>Supports: Intake &amp; eligibility</span></div></div>
+ <div class="px-network-legend"><span><i class="px-legend-active"></i><span data-px-legend>Connected to this stage</span></span><span><i class="px-legend-record"></i>Shared at every stage</span></div></div></div>
+ <div class="px-foundation"><div class="px-foundation-label"><span class="px-foundation-symbol" aria-hidden="true">⌘</span><div><strong>The foundation beneath every stage</strong><p>Documents, deadlines and history stay connected at every stage.</p></div></div><div class="px-foundation-grid"><div><span class="px-foundation-no" aria-hidden="true">01</span><h4>Documents &amp; evidence</h4><p>Supporting information stays with the case.</p></div><div><span class="px-foundation-no" aria-hidden="true">02</span><h4>Deadlines &amp; follow-up</h4><p>Case dates and the next action stay in view.</p></div><div><span class="px-foundation-no" aria-hidden="true">03</span><h4>Audit history</h4><p>Documents, timestamps and actions are organized from the start.</p></div></div></div>
+ <div class="px-room-footer"><p>This is a workflow illustration. The supporting record spans the lifecycle.</p><span>Software + specialist expertise</span></div><span class="px-screen-reader" role="status" aria-live="polite" aria-atomic="true" data-px-status></span></div></div></section>'''
